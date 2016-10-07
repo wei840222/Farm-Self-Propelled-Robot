@@ -49,3 +49,9 @@ void avoidViolentConflict() {
     delay(200);
   }
 }
+
+void lcdShowData() {
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print(mpuGetAngle());
+}
