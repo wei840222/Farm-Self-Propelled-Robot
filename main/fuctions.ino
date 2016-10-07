@@ -1,3 +1,15 @@
+///////////////////////////////////   判斷關卡特殊事件   ///////////////////////////////////
+void stageEvent() {
+  const int rightPot = 35;
+  switch (stage) {
+    case 0:
+      break;
+    case 1:
+      if (ultR.distanceCM() < rightPot) irrigateRightPot();
+      break;
+  }
+}
+
 ///////////////////////////////////   走直線   ///////////////////////////////////
 void goStraight() {
   const int fixInterval = 1;                  //角度修正區間
@@ -44,6 +56,65 @@ bool avoidance() {
   else return false;
 }
 
+///////////////////////////////////   澆灌右邊盆栽   ///////////////////////////////////
+void irrigateRightPot() {
+  const int potFindDistance = 25;                //盆栽尋找距離
+  const int potIrrigateDistance = 10;            //澆灌距離
+  float distance;
+
+  //逆時針轉
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("L-Rotate");
+  motL.output(-65);
+  motR.output(80);
+
+  //尋找盆栽
+  lcd.setCursor(0, 1);
+  lcd.print("Find Pot");
+  while (ultB.distanceCM() > potFindDistance);
+  delay(200);
+
+  //停車一秒鐘
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Stop 1s");
+  motL.stop();
+  motR.stop();
+  delay(1000);
+
+  //調整至澆灌距離
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Fix Distance");
+  while (true) {
+    distance = ultB.distanceCM();
+    if (distance < potIrrigateDistance) {
+      motL.output(65);
+      motR.output(80);
+    }
+    if (distance > potIrrigateDistance) {
+      motL.output(-65);
+      motR.output(-80);
+    }
+    if (distance == potIrrigateDistance) break;
+  }
+
+  //停車一秒鐘
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Stop 1s");
+  motL.stop();
+  motR.stop();
+  delay(1000);
+
+  //澆水2秒
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Watering! 2s");
+  watering(2000);
+}
+
 ///////////////////////////////////   其他   ///////////////////////////////////
 void waitForStart() {
   while (true) {
@@ -69,4 +140,10 @@ void avoidViolentConflict() {
     motR.output(motorRightDefaut * i / 10);
     delay(200);
   }
+}
+
+void watering(int time) {
+  digitalWrite(34, HIGH);
+  delay(time);
+  digitalWrite(34, LOW);
 }
