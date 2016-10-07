@@ -140,5 +140,6 @@ void loop() {
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print(mpuGetAngle());
+  stageEvent();
   if (!avoidance()) goStraight();
 }

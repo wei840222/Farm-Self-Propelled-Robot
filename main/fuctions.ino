@@ -1,7 +1,11 @@
 ///////////////////////////////////   判斷關卡特殊事件   ///////////////////////////////////
 void stageEvent() {
+  const int rightPot = 25;
   switch (stage) {
     case 0:
+      break;
+    case 1:
+      if (ultR.distanceCM() < rightPot) irrigateRightPot();
       break;
   }
 }
@@ -60,54 +64,79 @@ void irrigateRightPot() {
   char rotate;                                   //旋轉方向
 
   //逆時針轉
-  motL.output(-motorLeftDefaut);
-  motR.output(motorRightDefaut);
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("L-Rotate");
+  motL.output(-75);
+  motR.output(90);
   rotate = 'L';
 
   //尋找盆栽
+  lcd.setCursor(0, 1);
+  lcd.print("Find Pot");
   while (ultB.distanceCM() > potFindDistance);
 
   //計算盆栽中心點
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Find Pot Mid");
   potDistance = ultB.distanceCM();
   while (true) {
     distance = ultB.distanceCM();
     if (distance < potDistance) potDistance = distance;
+    lcd.setCursor(0, 1);
+    lcd.print("minDis=");
+    lcd.print(potDistance);
     if (distance > potFindDistance) break;
   }
 
   //對準盆栽中心點
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Check Pot Mid");
   while (true) {
     distance = ultB.distanceCM();
     if (distance > potDistance) {
       if (rotate == 'L') {
-        motL.output(motorLeftDefaut);
-        motR.output(-motorRightDefaut);
+        motL.output(75);
+        motR.output(-90);
         rotate = 'R';
+        lcd.setCursor(0, 1);
+        lcd.print("R-Rotate");
       }
       if (rotate == 'R') {
-        motL.output(-motorLeftDefaut);
-        motR.output(motorRightDefaut);
+        motL.output(-75);
+        motR.output(90);
         rotate = 'L';
+        lcd.setCursor(0, 1);
+        lcd.print("L-Rotate");
       }
     }
     if (distance <= potDistance) break;
   }
 
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("OK!");
+
   motL.stop();
   motR.stop();
-  rotate = null;
+  rotate = '\0';
   delay(1000);
 
   //調整至澆灌距離
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Fix Distance");
   while (true) {
     distance = ultB.distanceCM();
     if (distance < potIrrigateDistance) {
-      motL.output(motorLeftDefaut);
-      motR.output(motorRightDefaut);
+      motL.output(75);
+      motR.output(90);
     }
     if (distance > potIrrigateDistance) {
-      motL.output(-motorLeftDefaut);
-      motR.output(-motorRightDefaut);
+      motL.output(-75);
+      motR.output(-90);
     }
     if (distance == potIrrigateDistance) {
       motL.stop();
@@ -119,7 +148,12 @@ void irrigateRightPot() {
   delay(1000);
 
   //澆水2秒
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Watering!");
   watering(2000);
+
+  while(true);
 }
 
 ///////////////////////////////////   其他   ///////////////////////////////////
@@ -147,4 +181,10 @@ void avoidViolentConflict() {
     motR.output(motorRightDefaut * i / 10);
     delay(200);
   }
+}
+
+void watering(int time) {
+  digitalWrite(34, HIGH);
+  delay(time);
+  digitalWrite(34, LOW);
 }
