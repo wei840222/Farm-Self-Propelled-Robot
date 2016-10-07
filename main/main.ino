@@ -80,6 +80,8 @@ class Ultrasonic {
 const int motorLeftDefaut = 108;            //左馬達無修正值
 const int motorRightDefaut = 146;           //右馬達無修正值
 
+int stage = 0;
+
 ///////////////////////////////////   建立裝置物件   ///////////////////////////////////
 MPU6050 mpu;
 Ultrasonic ultL, ultR, ultF, ultB;
@@ -121,6 +123,13 @@ void setup() {
   lcd.begin(16, 2);
   lcd.setCursor(0, 0);
   lcd.print("Fuck you!");
+
+  //初始化按鈕
+  pinMode (35, INPUT);
+  pinMode (36, INPUT);
+
+  //等待選關準備開始
+  waitForStart();
 
   //慢慢加速防暴衝
   avoidViolentConflict();
