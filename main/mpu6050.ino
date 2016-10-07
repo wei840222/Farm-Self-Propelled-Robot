@@ -21,7 +21,7 @@ int giro_deadzone = 1;   //Giro error allowed, make it lower to get more precisi
 int16_t ax, ay, az, gx, gy, gz;
 int mean_ax, mean_ay, mean_az, mean_gx, mean_gy, mean_gz, state = 0;
 
-int ax_offset = -203, ay_offset = 1486, az_offset = 1352, gx_offset = 62, gy_offset = -19, gz_offset = -64;
+int ax_offset = -279, ay_offset = 1485, az_offset = 1344, gx_offset = 63, gy_offset = -24, gz_offset = -68;
 
 ///////////////////////////////////   FUNCTIONS   ///////////////////////////////////
 void dmpDataReady() {
@@ -80,7 +80,7 @@ void mpuInit() {
     mpuIntStatus = mpu.getIntStatus();
 
     // set our DMP Ready flag so the main loop() function knows it's okay to use it
-    Serial.println(F("DMP ready! Waiting for first interrupt..."));
+    Serial.println(F("DMP ready!"));
     dmpReady = true;
 
     // get expected DMP packet size for later comparison
@@ -93,6 +93,7 @@ void mpuInit() {
 }
 
 int mpuGetAngle() {
+  const float angleFix = 0.5;
   // reset interrupt flag and get INT_STATUS byte
   mpuInterrupt = false;
   mpuIntStatus = mpu.getIntStatus();
@@ -122,7 +123,7 @@ int mpuGetAngle() {
     mpu.dmpGetQuaternion(&q, fifoBuffer);
     mpu.dmpGetGravity(&gravity, &q);
     mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-    return ypr[0] * 180 / M_PI;
+    return ypr[0] * 180 / M_PI + angleFix;
 //#endif
   }
 }
