@@ -30,7 +30,7 @@ class Motor {
     }
 
     void output(int power) {
-      power = power*reverse;
+      power *= reverse;
       if (power > powerMax) power = powerMax;
       if (power < -powerMax)power = -powerMax;
       if (power >= 0) {
@@ -57,7 +57,7 @@ class Ultrasonic {
       pinTrig = trig;
       pinEcho = echo;
       pinMode (pinTrig, OUTPUT);
-      pinMode (pinEcho, OUTPUT);
+      pinMode (pinEcho, INPUT);
     }
 
     float distanceCM() {
@@ -138,6 +138,8 @@ void setup() {
 
 void loop() {
   lcdShowData();
-  avoidance();
-  goStraight();
+  if (!avoidance()) goStraight();
+  Serial.print(ultL.distanceCM());
+  Serial.print(" ");
+  Serial.println(ultR.distanceCM());
 }

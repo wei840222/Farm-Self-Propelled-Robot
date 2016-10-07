@@ -21,7 +21,7 @@ void goStraight() {
 }
 
 ///////////////////////////////////   左右避障   ///////////////////////////////////
-void avoidance() {
+bool avoidance() {
   const int fixDistance = 10;                   //開始閃牆距離
   const int minDistance = 5;                    //最小閃牆距離
 
@@ -34,11 +34,14 @@ void avoidance() {
   if (distanceL < fixDistance) {
     motL.output(motorLeftDefaut);
     motR.output(motorRightDefaut - motorRightDefaut / (fixDistance - minDistance) * (fixDistance - distanceL));
+    return true;
   }
-  if (distanceR < fixDistance) {
+  else if (distanceR < fixDistance) {
     motL.output(motorLeftDefaut - motorLeftDefaut / (fixDistance - minDistance) * (fixDistance - distanceR));
     motR.output(motorRightDefaut);
+    return true;
   }
+  else return false;
 }
 
 ///////////////////////////////////   其他   ///////////////////////////////////
