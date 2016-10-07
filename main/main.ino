@@ -30,7 +30,7 @@ class Motor {
     }
 
     void output(int power) {
-      power *= reverse;
+      power = power*reverse;
       if (power > powerMax) power = powerMax;
       if (power < -powerMax)power = -powerMax;
       if (power >= 0) {
