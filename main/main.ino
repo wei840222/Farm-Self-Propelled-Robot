@@ -30,18 +30,18 @@ class Motor {
     }
 
     void output(int power) {
-      power *= reverse;
+      power = power*reverse;
       if (power > powerMax) power = powerMax;
       if (power < -powerMax)power = -powerMax;
       if (power >= 0) {
         digitalWrite(pinA, HIGH);
         digitalWrite(pinB, LOW);
-        analogWrite(pinPWM, power);
+        analogWrite(pinPWM, abs(power));
       }
       else {
         digitalWrite(pinA, LOW);
         digitalWrite(pinB, HIGH);
-        analogWrite(pinPWM, power);
+        analogWrite(pinPWM, abs(power));
       }
     }
 };
@@ -119,14 +119,15 @@ void setup() {
   serL.write(90);
   serR.write(90);
 
+  //初始化按鈕
+  pinMode (35, INPUT);
+  pinMode (36, INPUT);
+
   //初始化LCD
   lcd.begin(16, 2);
   lcd.setCursor(0, 0);
   lcd.print("Fuck you!");
-
-  //初始化按鈕
-  pinMode (35, INPUT);
-  pinMode (36, INPUT);
+  delay(2000);
 
   //等待選關準備開始
   waitForStart();
