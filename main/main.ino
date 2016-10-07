@@ -1,5 +1,6 @@
 #include <Servo.h>
 #include "MPU6050_6Axis_MotionApps20.h"
+#include "LiquidCrystal_I2C.h"
 
 ///////////////////////////////////   硬體類別   ///////////////////////////////////
 class Motor {
@@ -84,6 +85,7 @@ MPU6050 mpu;
 Ultrasonic ultL, ultR, ultF, ultB;
 Motor motL, motR;
 Servo serB, serL, serR;
+LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
 
 void setup() {
   //設定鮑率
@@ -115,11 +117,17 @@ void setup() {
   serL.write(90);
   serR.write(90);
 
+  //初始化LCD
+  lcd.begin(16, 2);
+  lcd.setCursor(0, 0);
+  lcd.print("Fuck you!");
+
   //慢慢加速防暴衝
   avoidViolentConflict();
 }
 
 void loop() {
+  lcdShowData();
   avoidance();
   goStraight();
 }
