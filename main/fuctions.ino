@@ -73,3 +73,6 @@ void lcdShowData() {
   lcd.setCursor(0, 0);
   lcd.print(mpuGetAngle());
 }
+
+void serialShowData() {
+}
