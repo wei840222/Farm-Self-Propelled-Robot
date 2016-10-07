@@ -42,6 +42,24 @@ void avoidance() {
 }
 
 ///////////////////////////////////   其他   ///////////////////////////////////
+void waitForStart() {
+  while (true) {
+    delay(200);
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print(stage);
+    if (digitalRead(35)) {
+      while (digitalRead(35));
+      stage++;
+      if (stage > 7) stage = 0;
+    }
+    if (digitalRead(36)) {
+      while (digitalRead(36));
+      break;
+    }
+  }
+}
+
 void avoidViolentConflict() {
   for (int i = 0; i < 10; i++) {
     motL.output(motorLeftDefaut * i / 10);
