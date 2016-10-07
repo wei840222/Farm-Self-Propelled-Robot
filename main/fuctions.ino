@@ -1,3 +1,11 @@
+///////////////////////////////////   判斷關卡特殊事件   ///////////////////////////////////
+void stageEvent() {
+  switch (stage) {
+    case 0:
+      break;
+  }
+}
+
 ///////////////////////////////////   走直線   ///////////////////////////////////
 void goStraight() {
   const int fixInterval = 1;                  //角度修正區間
@@ -42,6 +50,76 @@ bool avoidance() {
     return true;
   }
   else return false;
+}
+
+///////////////////////////////////   澆灌右邊盆栽   ///////////////////////////////////
+void irrigateRightPot() {
+  const int potFindDistance = 25;                //盆栽尋找距離
+  const int potIrrigateDistance = 10;            //澆灌距離
+  int distance, potDistance;                     //量測到的距離
+  char rotate;                                   //旋轉方向
+
+  //逆時針轉
+  motL.output(-motorLeftDefaut);
+  motR.output(motorRightDefaut);
+  rotate = 'L';
+
+  //尋找盆栽
+  while (ultB.distanceCM() > potFindDistance);
+
+  //計算盆栽中心點
+  potDistance = ultB.distanceCM();
+  while (true) {
+    distance = ultB.distanceCM();
+    if (distance < potDistance) potDistance = distance;
+    if (distance > potFindDistance) break;
+  }
+
+  //對準盆栽中心點
+  while (true) {
+    distance = ultB.distanceCM();
+    if (distance > potDistance) {
+      if (rotate == 'L') {
+        motL.output(motorLeftDefaut);
+        motR.output(-motorRightDefaut);
+        rotate = 'R';
+      }
+      if (rotate == 'R') {
+        motL.output(-motorLeftDefaut);
+        motR.output(motorRightDefaut);
+        rotate = 'L';
+      }
+    }
+    if (distance <= potDistance) break;
+  }
+
+  motL.stop();
+  motR.stop();
+  rotate = null;
+  delay(1000);
+
+  //調整至澆灌距離
+  while (true) {
+    distance = ultB.distanceCM();
+    if (distance < potIrrigateDistance) {
+      motL.output(motorLeftDefaut);
+      motR.output(motorRightDefaut);
+    }
+    if (distance > potIrrigateDistance) {
+      motL.output(-motorLeftDefaut);
+      motR.output(-motorRightDefaut);
+    }
+    if (distance == potIrrigateDistance) {
+      motL.stop();
+      motR.stop();
+      break;
+    }
+  }
+
+  delay(1000);
+
+  //澆水2秒
+  watering(2000);
 }
 
 ///////////////////////////////////   其他   ///////////////////////////////////
