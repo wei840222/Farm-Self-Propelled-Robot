@@ -1,6 +1,6 @@
 ///////////////////////////////////   判斷關卡特殊事件   ///////////////////////////////////
 void stageEvent() {
-  const int rightPot = 25;
+  const int rightPot = 35;
   switch (stage) {
     case 0:
       break;
@@ -60,68 +60,27 @@ bool avoidance() {
 void irrigateRightPot() {
   const int potFindDistance = 25;                //盆栽尋找距離
   const int potIrrigateDistance = 10;            //澆灌距離
-  int distance, potDistance;                     //量測到的距離
-  char rotate;                                   //旋轉方向
+  float distance;
 
   //逆時針轉
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("L-Rotate");
-  motL.output(-75);
-  motR.output(90);
-  rotate = 'L';
+  motL.output(-65);
+  motR.output(80);
 
   //尋找盆栽
   lcd.setCursor(0, 1);
   lcd.print("Find Pot");
   while (ultB.distanceCM() > potFindDistance);
+  delay(200);
 
-  //計算盆栽中心點
+  //停車一秒鐘
   lcd.clear();
   lcd.setCursor(0, 0);
-  lcd.print("Find Pot Mid");
-  potDistance = ultB.distanceCM();
-  while (true) {
-    distance = ultB.distanceCM();
-    if (distance < potDistance) potDistance = distance;
-    lcd.setCursor(0, 1);
-    lcd.print("minDis=");
-    lcd.print(potDistance);
-    if (distance > potFindDistance) break;
-  }
-
-  //對準盆栽中心點
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Check Pot Mid");
-  while (true) {
-    distance = ultB.distanceCM();
-    if (distance > potDistance) {
-      if (rotate == 'L') {
-        motL.output(75);
-        motR.output(-90);
-        rotate = 'R';
-        lcd.setCursor(0, 1);
-        lcd.print("R-Rotate");
-      }
-      if (rotate == 'R') {
-        motL.output(-75);
-        motR.output(90);
-        rotate = 'L';
-        lcd.setCursor(0, 1);
-        lcd.print("L-Rotate");
-      }
-    }
-    if (distance <= potDistance) break;
-  }
-
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("OK!");
-
+  lcd.print("Stop 1s");
   motL.stop();
   motR.stop();
-  rotate = '\0';
   delay(1000);
 
   //調整至澆灌距離
@@ -131,29 +90,29 @@ void irrigateRightPot() {
   while (true) {
     distance = ultB.distanceCM();
     if (distance < potIrrigateDistance) {
-      motL.output(75);
-      motR.output(90);
+      motL.output(65);
+      motR.output(80);
     }
     if (distance > potIrrigateDistance) {
-      motL.output(-75);
-      motR.output(-90);
+      motL.output(-65);
+      motR.output(-80);
     }
-    if (distance == potIrrigateDistance) {
-      motL.stop();
-      motR.stop();
-      break;
-    }
+    if (distance == potIrrigateDistance) break;
   }
 
+  //停車一秒鐘
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Stop 1s");
+  motL.stop();
+  motR.stop();
   delay(1000);
 
   //澆水2秒
   lcd.clear();
   lcd.setCursor(0, 0);
-  lcd.print("Watering!");
+  lcd.print("Watering! 2s");
   watering(2000);
-
-  while(true);
 }
 
 ///////////////////////////////////   其他   ///////////////////////////////////
