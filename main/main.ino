@@ -30,7 +30,7 @@ class Motor {
     }
 
     void output(int power) {
-      power = power*reverse;
+      power *= reverse;
       if (power > powerMax) power = powerMax;
       if (power < -powerMax)power = -powerMax;
       if (power >= 0) {
@@ -137,9 +137,8 @@ void setup() {
 }
 
 void loop() {
-  lcdShowData();
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print(mpuGetAngle());
   if (!avoidance()) goStraight();
-  Serial.print(ultL.distanceCM());
-  Serial.print(" ");
-  Serial.println(ultR.distanceCM());
 }

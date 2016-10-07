@@ -15,8 +15,8 @@ void goStraight() {
     motR.output(motorRightDefaut + angle * (255 - motorRightDefaut) / 90);
   }
   else {
-    motL.output(motorLeftDefaut + angle * (255 - motorLeftDefaut) / 90);
-    motR.output(motorRightDefaut - angle * motorRightDefaut / 90);
+    motL.output(motorLeftDefaut + abs(angle) * (255 - motorLeftDefaut) / 90);
+    motR.output(motorRightDefaut - abs(angle) * motorRightDefaut / 90);
   }
 }
 
@@ -69,13 +69,4 @@ void avoidViolentConflict() {
     motR.output(motorRightDefaut * i / 10);
     delay(200);
   }
-}
-
-void lcdShowData() {
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print(mpuGetAngle());
-}
-
-void serialShowData() {
 }
