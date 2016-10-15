@@ -77,8 +77,8 @@ class Ultrasonic {
 };
 
 ///////////////////////////////////   控制參數   ///////////////////////////////////
-const int motorLeftDefaut = 108;            //左馬達無修正值
-const int motorRightDefaut = 146;           //右馬達無修正值
+const int motorLeftDefaut = 122;            //左馬達無修正值
+const int motorRightDefaut = 132;           //右馬達無修正值
 
 int stage = 0;
 
@@ -106,7 +106,6 @@ void setup() {
   //初始化左右輪馬達
   motL.init(22, 23, 3);
   motR.init(24, 25, 4);
-  motR.setReverse();
 
   //初始化抽水馬達
   pinMode (34, OUTPUT);
@@ -126,14 +125,14 @@ void setup() {
   //初始化LCD
   lcd.begin(16, 2);
   lcd.setCursor(0, 0);
-  lcd.print("Fuck you!");
+  lcd.print("Ready!");
   delay(2000);
 
   //等待選關準備開始
   waitForStart();
 
   //慢慢加速防暴衝
-  avoidViolentConflict();
+  //avoidViolentConflict();
 }
 
 void loop() {
