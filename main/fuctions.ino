@@ -66,8 +66,8 @@ void irrigateRightPot() {
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("L-Rotate");
-  motL.output(-65);
-  motR.output(80);
+  motL.output(-75);
+  motR.output(85);
 
   //尋找盆栽
   lcd.setCursor(0, 1);
@@ -90,12 +90,12 @@ void irrigateRightPot() {
   while (true) {
     distance = ultB.distanceCM();
     if (distance < potIrrigateDistance) {
-      motL.output(65);
-      motR.output(80);
+      motL.output(75);
+      motR.output(85);
     }
     if (distance > potIrrigateDistance) {
-      motL.output(-65);
-      motR.output(-80);
+      motL.output(-75);
+      motR.output(-85);
     }
     if (distance == potIrrigateDistance) break;
   }
