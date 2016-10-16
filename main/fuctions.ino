@@ -13,7 +13,7 @@ void stageEvent() {
 ///////////////////////////////////   走直線   ///////////////////////////////////
 void goStraight() {
   const int fixInterval = 1;                  //角度修正區間
-  const int moreFixInterval = 10;             //加強角度修正區間
+  const int moreFixInterval = 20;             //加強角度修正區間
   const int fixMaxAngle = 90;                 //最大修正角度
 
   int angle = mpuGetAngle();
@@ -34,8 +34,8 @@ void goStraight() {
 
 ///////////////////////////////////   左右避障   ///////////////////////////////////
 bool avoidance() {
-  const int fixDistance = 10;                   //開始閃牆距離
-  const int minDistance = 5;                    //最小閃牆距離
+  const int fixDistance = 9;                   //開始閃牆距離
+  const int minDistance = 4;                    //最小閃牆距離
 
   float distanceL = ultL.distanceCM();
   float distanceR = ultR.distanceCM();

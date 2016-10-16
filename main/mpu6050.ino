@@ -21,7 +21,7 @@ int giro_deadzone = 1;   //Giro error allowed, make it lower to get more precisi
 int16_t ax, ay, az, gx, gy, gz;
 int mean_ax, mean_ay, mean_az, mean_gx, mean_gy, mean_gz, state = 0;
 
-int ax_offset = -279, ay_offset = 1485, az_offset = 1344, gx_offset = 63, gy_offset = -24, gz_offset = -68;
+int ax_offset = -229, ay_offset = 1475, az_offset = 1333, gx_offset = 65, gy_offset = -26, gz_offset = -69;
 
 ///////////////////////////////////   FUNCTIONS   ///////////////////////////////////
 void dmpDataReady() {

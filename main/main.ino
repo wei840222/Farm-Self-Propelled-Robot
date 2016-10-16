@@ -77,8 +77,8 @@ class Ultrasonic {
 };
 
 ///////////////////////////////////   控制參數   ///////////////////////////////////
-const int motorLeftDefaut = 122;            //左馬達無修正值
-const int motorRightDefaut = 132;           //右馬達無修正值
+const int motorLeftDefaut = 196;            //左馬達無修正值
+const int motorRightDefaut = 256;           //右馬達無修正值
 
 int stage = 0;
 
