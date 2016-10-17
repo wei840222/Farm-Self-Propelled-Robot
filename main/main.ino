@@ -76,11 +76,10 @@ class Ultrasonic {
     }
 };
 
-///////////////////////////////////   控制參數   ///////////////////////////////////
-const int motorLeftDefaut = 196;            //左馬達無修正值
-const int motorRightDefaut = 256;           //右馬達無修正值
-
-int stage = 0;
+///////////////////////////////////   全域變數   ///////////////////////////////////
+int motorLeftDefaut;            //左馬達基速
+int motorRightDefaut;           //右馬達基速
+int stage;                      //關卡編號
 
 ///////////////////////////////////   建立裝置物件   ///////////////////////////////////
 MPU6050 mpu;
@@ -124,15 +123,9 @@ void setup() {
 
   //初始化LCD
   lcd.begin(16, 2);
-  lcd.setCursor(0, 0);
-  lcd.print("Ready!");
-  delay(2000);
 
   //等待選關準備開始
   waitForStart();
-
-  //慢慢加速防暴衝
-  //avoidViolentConflict();
 }
 
 void loop() {
