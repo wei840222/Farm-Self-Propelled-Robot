@@ -80,7 +80,7 @@ class Ultrasonic {
 int motorLeftDefaut;            //左馬達基速
 int motorRightDefaut;           //右馬達基速
 int stage;                      //關卡編號
-
+int count = 0;                  //計數盆栽
 ///////////////////////////////////   建立裝置物件   ///////////////////////////////////
 MPU6050 mpu;
 Ultrasonic ultL, ultR, ultF, ultB;
@@ -131,6 +131,7 @@ void setup() {
 void loop() {
   lcd.clear();
   lcd.setCursor(0, 0);
+  lcd.print("Angle:");
   lcd.print(mpuGetAngle());
   stageEvent();
   if (!avoidance()) goStraight();
