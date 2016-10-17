@@ -2,12 +2,10 @@
 void stageEvent() {
   switch (stage) {
     case 0:
-      motorLeftDefaut = 180;
-      motorRightDefaut = 245;
+      setupMotorSpeed(180, 245, 0, 0);
       break;
     case 1:
-      motorLeftDefaut = 180;
-      motorRightDefaut = 245;
+      setupMotorSpeed(180, 245, 0, 0);
       //偵測右方盆栽
       lcd.setCursor(0, 1);
       lcd.print("Pot:");
@@ -18,69 +16,68 @@ void stageEvent() {
       }
       //偵測換關
       if (ultF.distanceCM() < 35 && ultL.distanceCM() < 50) {
-        motorLeftDefaut = 61;
-        motorRightDefaut = 81;
+        motorForwardLeftDefaut = 61;
+        motorForwardRightDefaut = 81;
         rotateToAngle(85);
         mpuInit();
         stage++;
       }
       break;
     case 2:
-      motorLeftDefaut = 180;
-      motorRightDefaut = 245;
+      setupMotorSpeed(180, 245, 0, 0);
       //偵測換關
       if (ultF.distanceCM() < 35 && ultL.distanceCM() < 50) {
-        motorLeftDefaut = 61;
-        motorRightDefaut = 81;
+        motorForwardLeftDefaut = 61;
+        motorForwardRightDefaut = 81;
         rotateToAngle(85);
         mpuInit();
         stage++;
       }
       break;
     case 3:
-      motorLeftDefaut = 90;
-      motorRightDefaut = 120;
+      motorForwardLeftDefaut = 90;
+      motorForwardRightDefaut = 120;
       //偵測換關
       break;
     case 4:
-      motorLeftDefaut = 180;
-      motorRightDefaut = 245;
+      motorForwardLeftDefaut = 180;
+      motorForwardRightDefaut = 245;
       //偵測換關
       if (ultF.distanceCM() < 35 && ultR.distanceCM() < 50) {
-        motorLeftDefaut = 61;
-        motorRightDefaut = 81;
+        motorForwardLeftDefaut = 61;
+        motorForwardRightDefaut = 81;
         rotateToAngle(-85);
         mpuInit();
         stage++;
       }
       break;
     case 5:
-      motorLeftDefaut = 180;
-      motorRightDefaut = 245;
+      motorForwardLeftDefaut = 180;
+      motorForwardRightDefaut = 245;
       //偵測換關
       if (ultF.distanceCM() < 35 && ultL.distanceCM() < 50) {
-        motorLeftDefaut = 180;
-        motorRightDefaut = 245;
+        motorForwardLeftDefaut = 180;
+        motorForwardRightDefaut = 245;
         rotateToAngle(85);
         mpuInit();
         stage++;
       }
       break;
     case 6:
-      motorLeftDefaut = 180;
-      motorRightDefaut = 245;
+      motorForwardLeftDefaut = 180;
+      motorForwardRightDefaut = 245;
       //偵測換關
       if (ultF.distanceCM() < 35 && ultL.distanceCM() < 50) {
-        motorLeftDefaut = 180;
-        motorRightDefaut = 245;
+        motorForwardLeftDefaut = 180;
+        motorForwardRightDefaut = 245;
         rotateToAngle(85);
         mpuInit();
         stage++;
       }
       break;
     case 7:
-      motorLeftDefaut = 180;
-      motorRightDefaut = 245;
+      motorForwardLeftDefaut = 180;
+      motorForwardRightDefaut = 245;
       //偵測換關
       if (ultF.distanceCM() < 35 && ultL.distanceCM() < 50) {
         stage++;
@@ -92,30 +89,37 @@ void stageEvent() {
       lcd.print("Clear!");
       lcd.setCursor(1, 0);
       lcd.print("Fuck all!");
-      motL.stop();
-      motR.stop();
+      motFL.stop();
+      motFR.stop();
   }
 }
 
 ///////////////////////////////////   走直線   ///////////////////////////////////
-void goStraight() {
+void fixStraight() {
   const int fixInterval = 1;                  //角度修正區間
   const int moreFixInterval = 20;             //加強角度修正區間
   const int fixMaxAngle = 90;                 //最大修正角度
-
   int angle = mpuGetAngle();
+
+  //顯示訊息
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("FixingStraight");
+  lcd.setCursor(0, 1);
+  lcd.print("Angle:");
+  lcd.print(mpuGetAngle());
 
   if (abs(angle) > fixMaxAngle) angle = fixMaxAngle * angle / abs(angle);
   if (abs(angle) <= moreFixInterval) angle = moreFixInterval * angle / abs(angle);
   if (abs(angle) <= fixInterval) angle = 0;
 
   if (angle >= 0) {
-    motL.output(motorLeftDefaut - angle * motorLeftDefaut / 90);
-    motR.output(motorRightDefaut + angle * (255 - motorRightDefaut) / 90);
+    motFL.output(motorForwardLeftDefaut - angle * motorForwardLeftDefaut / 90);
+    motFR.output(motorForwardRightDefaut + angle * (255 - motorForwardRightDefaut) / 90);
   }
   else {
-    motL.output(motorLeftDefaut + abs(angle) * (255 - motorLeftDefaut) / 90);
-    motR.output(motorRightDefaut - abs(angle) * motorRightDefaut / 90);
+    motFL.output(motorForwardLeftDefaut + abs(angle) * (255 - motorForwardLeftDefaut) / 90);
+    motFR.output(motorForwardRightDefaut - abs(angle) * motorForwardRightDefaut / 90);
   }
 }
 
@@ -123,21 +127,30 @@ void goStraight() {
 bool avoidance() {
   const int fixDistance = 9;                   //開始閃牆距離
   const int minDistance = 4;                    //最小閃牆距離
-
   float distanceL = ultL.distanceCM();
   float distanceR = ultR.distanceCM();
+
+  //顯示訊息
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Avoidancing");
+  lcd.setCursor(0, 1);
+  lcd.print("L:");
+  lcd.print(distanceL);
+  lcd.print(" R:");
+  lcd.print(distanceR);
 
   if (distanceL < minDistance) distanceL = minDistance;
   if (distanceR < minDistance) distanceR = minDistance;
 
   if (distanceL < fixDistance) {
-    motL.output(motorLeftDefaut);
-    motR.output(motorRightDefaut - motorRightDefaut / (fixDistance - minDistance) * (fixDistance - distanceL));
+    motFL.output(motorForwardLeftDefaut);
+    motFR.output(motorForwardRightDefaut - motorForwardRightDefaut / (fixDistance - minDistance) * (fixDistance - distanceL));
     return true;
   }
   else if (distanceR < fixDistance) {
-    motL.output(motorLeftDefaut - motorLeftDefaut / (fixDistance - minDistance) * (fixDistance - distanceR));
-    motR.output(motorRightDefaut);
+    motFL.output(motorForwardLeftDefaut - motorForwardLeftDefaut / (fixDistance - minDistance) * (fixDistance - distanceR));
+    motFR.output(motorForwardRightDefaut);
     return true;
   }
   else return false;
@@ -146,13 +159,13 @@ bool avoidance() {
 ///////////////////////////////////   澆灌右邊盆栽   ///////////////////////////////////
 void irrigateRightPot() {
   const int potFindDistance = 50;                //盆栽尋找距離
-  const int potIrrigateDistance = 12;            //澆灌距離
+  const int potIrrigateDistance = 20;            //澆灌距離
   float distance;
 
   delay(300);
   //設定馬達基速
-  motorLeftDefaut = 61;
-  motorRightDefaut = 81;
+  motorForwardLeftDefaut = 61;
+  motorForwardRightDefaut = 81;
 
   //逆時針旋轉尋找盆栽
   lcd.clear();
@@ -160,65 +173,41 @@ void irrigateRightPot() {
   lcd.print("L-Rotate");
   lcd.setCursor(0, 1);
   lcd.print("Find Pot");
-  motL.output(-motorLeftDefaut);
-  motR.output(motorRightDefaut);
+  motFL.output(-motorForwardLeftDefaut);
+  motFR.output(motorForwardRightDefaut);
   while (ultB.distanceCM() > potFindDistance);
 
-  //停車一秒鐘
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Stop 1s");
-  motL.stop();
-  motR.stop();
+  //停止
+  motorAllStop();
   delay(1000);
 
   //調整至澆灌距離
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Fix Distance");
   do {
     distance = ultB.distanceCM();
-    if (distance < potIrrigateDistance) {
-      motL.output(motorLeftDefaut);
-      motR.output(motorRightDefaut);
-    }
-    if (distance > potIrrigateDistance) {
-      motL.output(-motorLeftDefaut);
-      motR.output(-motorRightDefaut);
-    }
+    if (distance < potIrrigateDistance)
+      goForward();
+    if (distance > potIrrigateDistance)
+      goBack();
   } while (distance != potIrrigateDistance);
 
-  //停車一秒鐘
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Stop 1s");
-  motL.stop();
-  motR.stop();
+  //停車
+  motorAllStop();
   delay(1000);
 
-
-  //澆水2秒
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Watering! 7s");
+  //澆水
   watering(7000);
   delay(1000);
 
   //旋轉車體回0度
   rotateToAngle(0);
 
-  //前進1秒
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Forwarding 1s");
-  motL.output(motorLeftDefaut);
-  motR.output(motorRightDefaut);
+  //前進
+  goForward();
   delay(1000);
 }
 
 ///////////////////////////////////   其他   ///////////////////////////////////
 void waitForStart() {
-  stage = 0;
   while (true) {
     delay(200);
     lcd.clear();
@@ -237,10 +226,62 @@ void waitForStart() {
   }
 }
 
+void pause() {
+  if (digitalRead(36)) {
+    while (digitalRead(36));
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Pause");
+    motorAllStop();
+    while (!digitalRead(36));
+    while (digitalRead(36));
+  }
+}
+
 void watering(int time) {
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Water");
   digitalWrite(34, HIGH);
   delay(time);
   digitalWrite(34, LOW);
+}
+
+void setupMotorSpeed(int FL, int FR, int BL, int BR) {
+  motorForwardLeftDefaut = FL;
+  motorForwardRightDefaut = FR;
+  motorBackLeftDefaut = BL;
+  motorBackRightDefaut = BR;
+}
+
+void goForward() {
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Forward");
+  motFL.output(motorForwardLeftDefaut);
+  motFR.output(motorForwardRightDefaut);
+  motBL.output(motorBackLeftDefaut);
+  motBR.output(motorBackRightDefaut);
+}
+
+void goBack() {
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Back");
+  motFL.output(-motorForwardLeftDefaut);
+  motFR.output(-motorForwardRightDefaut);
+  motBL.output(-motorBackLeftDefaut);
+  motBR.output(-motorBackRightDefaut);
+}
+
+void motorAllStop() {
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Stop");
+  motFL.stop();
+  motFR.stop();
+  motBL.stop();
+  motBR.stop();
 }
 
 void rotateToAngle(int rotationAngle) {
@@ -255,15 +296,14 @@ void rotateToAngle(int rotationAngle) {
     lcd.print("Angle:");
     lcd.print(angle);
     if (angle > rotationAngle) {
-      motL.output(-motorLeftDefaut);
-      motR.output(motorRightDefaut);
+      motFL.output(-motorForwardLeftDefaut);
+      motFR.output(motorForwardRightDefaut);
     }
     if (angle < rotationAngle) {
-      motL.output(motorLeftDefaut);
-      motR.output(-motorRightDefaut);
+      motFL.output(motorForwardLeftDefaut);
+      motFR.output(-motorForwardRightDefaut);
     }
   } while (angle != rotationAngle);
-  motL.stop();
-  motR.stop();
+  motorAllStop();
   delay(1000);
 }

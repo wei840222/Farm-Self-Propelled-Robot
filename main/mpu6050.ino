@@ -92,7 +92,7 @@ void mpuInit() {
   }
 }
 
-int mpuGetAngle() {
+float mpuGetAngle() {
   const float angleFix = 0.5;
   // reset interrupt flag and get INT_STATUS byte
   mpuInterrupt = false;

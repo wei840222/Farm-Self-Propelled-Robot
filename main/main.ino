@@ -77,14 +77,17 @@ class Ultrasonic {
 };
 
 ///////////////////////////////////   全域變數   ///////////////////////////////////
-int motorLeftDefaut;            //左馬達基速
-int motorRightDefaut;           //右馬達基速
-int stage;                      //關卡編號
+int motorForwardLeftDefaut;            //左前馬達基速
+int motorForwardRightDefaut;           //右前馬達基速
+int motorBackLeftDefaut;               //左後馬達基速
+int motorBackRightDefaut;              //右後馬達基速
+
+int stage = 0;                  //關卡編號
 int count = 0;                  //計數盆栽
 ///////////////////////////////////   建立裝置物件   ///////////////////////////////////
 MPU6050 mpu;
 Ultrasonic ultL, ultR, ultF, ultB;
-Motor motL, motR;
+Motor motFL, motFR, motBL, motBR;
 Servo serB, serL, serR;
 LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
 
@@ -103,8 +106,10 @@ void setup() {
   ultB.init(32, 33);
 
   //初始化左右輪馬達
-  motL.init(22, 23, 3);
-  motR.init(24, 25, 4);
+  motFL.init(22, 23, 3);
+  motBL.init(37, 38, 8);
+  motFR.init(24, 25, 4);
+  motBR.init(39, 40, 9);
 
   //初始化抽水馬達
   pinMode (34, OUTPUT);
@@ -129,10 +134,9 @@ void setup() {
 }
 
 void loop() {
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Angle:");
-  lcd.print(mpuGetAngle());
+  pause();
+  /*
   stageEvent();
-  if (!avoidance()) goStraight();
+  if (!avoidance()) fixStraight();
+  */
 }
