@@ -17,9 +17,9 @@ void stageEvent() {
         count++;
       }
       //偵測換關
-      if (ultF.distanceCM() < 50 && ultL.distanceCM() < 50) {
-        motorLeftDefaut = 60;
-        motorRightDefaut = 80;
+      if (ultF.distanceCM() < 35 && ultL.distanceCM() < 50) {
+        motorLeftDefaut = 61;
+        motorRightDefaut = 81;
         rotateToAngle(85);
         mpuInit();
         stage++;
@@ -29,9 +29,9 @@ void stageEvent() {
       motorLeftDefaut = 180;
       motorRightDefaut = 245;
       //偵測換關
-      if (ultF.distanceCM() < 50 && ultL.distanceCM() < 50) {
-        motorLeftDefaut = 60;
-        motorRightDefaut = 80;
+      if (ultF.distanceCM() < 35 && ultL.distanceCM() < 50) {
+        motorLeftDefaut = 61;
+        motorRightDefaut = 81;
         rotateToAngle(85);
         mpuInit();
         stage++;
@@ -46,9 +46,9 @@ void stageEvent() {
       motorLeftDefaut = 180;
       motorRightDefaut = 245;
       //偵測換關
-      if (ultF.distanceCM() < 50 && ultR.distanceCM() < 50) {
-        motorLeftDefaut = 60;
-        motorRightDefaut = 80;
+      if (ultF.distanceCM() < 35 && ultR.distanceCM() < 50) {
+        motorLeftDefaut = 61;
+        motorRightDefaut = 81;
         rotateToAngle(-85);
         mpuInit();
         stage++;
@@ -58,7 +58,7 @@ void stageEvent() {
       motorLeftDefaut = 180;
       motorRightDefaut = 245;
       //偵測換關
-      if (ultF.distanceCM() < 50 && ultL.distanceCM() < 50) {
+      if (ultF.distanceCM() < 35 && ultL.distanceCM() < 50) {
         motorLeftDefaut = 180;
         motorRightDefaut = 245;
         rotateToAngle(85);
@@ -70,7 +70,7 @@ void stageEvent() {
       motorLeftDefaut = 180;
       motorRightDefaut = 245;
       //偵測換關
-      if (ultF.distanceCM() < 50 && ultL.distanceCM() < 50) {
+      if (ultF.distanceCM() < 35 && ultL.distanceCM() < 50) {
         motorLeftDefaut = 180;
         motorRightDefaut = 245;
         rotateToAngle(85);
@@ -82,7 +82,7 @@ void stageEvent() {
       motorLeftDefaut = 180;
       motorRightDefaut = 245;
       //偵測換關
-      if (ultF.distanceCM() < 50 && ultL.distanceCM() < 50) {
+      if (ultF.distanceCM() < 35 && ultL.distanceCM() < 50) {
         stage++;
       }
       break;
@@ -244,7 +244,6 @@ void watering(int time) {
 }
 
 void rotateToAngle(int rotationAngle) {
-  const int missIvl = 5;
   int angle;
   do {
     angle = mpuGetAngle();
