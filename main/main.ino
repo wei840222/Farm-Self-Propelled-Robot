@@ -27,6 +27,10 @@ class Motor {
       reverse *= -1;
     }
 
+    void setDefaut(int D) {
+      defaut = D;
+    }
+
     void stop() {
       digitalWrite(pinA, LOW);
       digitalWrite(pinB, LOW);
@@ -114,11 +118,15 @@ void setup() {
   ultF.init(30, 31);
   ultB.init(32, 33);
 
-  //初始化左右輪馬達
+  //初始化左右輪馬達並設定基值
   motLF.init(22, 23, 3);
   motRF.init(24, 25, 4);
   motLB.init(37, 38, 8);
   motRB.init(39, 40, 9);
+  motLF.setDefaut(90);
+  motLB.setDefaut(90 / 6.5 * 12);
+  motRF.setDefaut(113);
+  motRB.setDefaut(113 / 6.5 * 12);
 
   //初始化抽水馬達
   pinMode (34, OUTPUT);
@@ -139,29 +147,12 @@ void setup() {
   lcd.begin(16, 2);
 
   //等待選關準備開始
-  //waitForStart();
+  waitForStart();
 }
 
 void loop() {
-  /*
-  waitForPause();
   showData();
   stageEvent();
   if (!avoidance()) fixStraight();
-  */
-  serB.write(140);
-  serL.write(120);
-  serR.write(60);
-
-  delay(1000);
-  serL.write(85);
-  serR.write(90);
-  delay(1000);
-  serB.write(80);
-  delay(1000);
-  serL.write(120);
-  serR.write(60);
-  delay(1000);
-  serB.write(140);
-  delay(5000);
+  waitForPause();
 }
