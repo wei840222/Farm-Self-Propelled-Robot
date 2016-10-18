@@ -29,6 +29,8 @@ void dmpDataReady() {
 }
 
 void mpuInit() {
+  Serial.println("///////////////////////////////////   MPU6050 Initialization   ///////////////////////////////////");
+
 #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
   Wire.begin();
 #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
@@ -37,6 +39,12 @@ void mpuInit() {
 
   // verify connection
   Serial.println(mpu.testConnection() ? "MPU6050 connection successful" : "MPU6050 connection failed");
+
+  Serial.println("Initializing I2C devices...");
+  mpu.initialize();
+
+  Serial.println("Initializing DMP...");
+  devStatus = mpu.dmpInitialize();
 
   // show your own gyro offsets here, scaled for min sensitivity
   Serial.println("The MPU6050 offset is: ");
@@ -53,12 +61,6 @@ void mpuInit() {
   Serial.print(" GZ:");
   Serial.println(gz_offset);
 
-  Serial.println(F("Initializing I2C devices..."));
-  mpu.initialize();
-
-  Serial.println(F("Initializing DMP..."));
-  devStatus = mpu.dmpInitialize();
-
   // use the code below to change accel/gyro offset values
   Serial.println("Updating internal sensor offsets...");
   mpu.setXAccelOffset(ax_offset);
@@ -71,25 +73,26 @@ void mpuInit() {
   // make sure it worked (returns 0 if so)
   if (devStatus == 0) {
     // turn on the DMP, now that it's ready
-    Serial.println(F("Enabling DMP..."));
+    Serial.println("Enabling DMP...");
     mpu.setDMPEnabled(true);
 
     // enable Arduino interrupt detection
-    Serial.println(F("Enabling interrupt detection (Arduino external interrupt 0)..."));
+    Serial.println("Enabling interrupt detection (Arduino external interrupt 0)...");
     attachInterrupt(0, dmpDataReady, RISING);
     mpuIntStatus = mpu.getIntStatus();
 
     // set our DMP Ready flag so the main loop() function knows it's okay to use it
-    Serial.println(F("DMP ready!"));
+    Serial.println("DMP ready!");
     dmpReady = true;
 
     // get expected DMP packet size for later comparison
     packetSize = mpu.dmpGetFIFOPacketSize();
   } else {
-    Serial.print(F("DMP Initialization failed (code "));
+    Serial.print("DMP Initialization failed (code ");
     Serial.print(devStatus);
-    Serial.println(F(")"));
+    Serial.println(")");
   }
+  Serial.print("\n\n\n");
 }
 
 float mpuGetAngle() {
@@ -118,13 +121,13 @@ float mpuGetAngle() {
     // (this lets us immediately read more without waiting for an interrupt)
     fifoCount -= packetSize;
 
-//#ifdef OUTPUT_READABLE_YAWPITCHROLL
+#ifdef OUTPUT_READABLE_YAWPITCHROLL
     // display Euler angles in degrees
     mpu.dmpGetQuaternion(&q, fifoBuffer);
     mpu.dmpGetGravity(&gravity, &q);
     mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
     return ypr[0] * 180 / M_PI + angleFix;
-//#endif
+#endif
   }
 }
 
@@ -138,8 +141,10 @@ void mpuOffset() {
   while (Serial.available() && Serial.read()); // empty buffer
 
   // start message
-  Serial.println("\nMPU6050 Calibration Sketch");
-  Serial.println("\nYour MPU6050 should be placed in horizontal position, with package letters facing up. \nDon't touch it until you see a finish message.\n");
+  Serial.println("///////////////////////////////////   MPU6050 Calibration   ///////////////////////////////////");
+  Serial.println("Your MPU6050 should be placed in horizontal position, with package letters facing up.");
+  Serial.println("Don't touch it until you see a finish message.");
+  Serial.print("\n\n\n");
 
   // reset offsets
   mpu.setXAccelOffset(0);
@@ -151,14 +156,14 @@ void mpuOffset() {
 
   // calculate offset
   if (state == 0) {
-    Serial.println("\nReading sensors for first time...");
+    Serial.println("Reading sensors for first time...");
     meansensors();
     state++;
     delay(1000);
   }
 
   if (state == 1) {
-    Serial.print("\nCalculating offsets...");
+    Serial.print("Calculating offsets...");
     calibration();
     state++;
     delay(1000);
@@ -166,33 +171,33 @@ void mpuOffset() {
 
   if (state == 2) {
     meansensors();
-    Serial.println("\nFINISHED!");
-    Serial.print("\nSensor readings with offsets:\t");
+    Serial.println("Finished!");
+    Serial.println("Sensor readings with offsets:");
+    Serial.print("AX");
     Serial.print(mean_ax);
-    Serial.print("\t");
+    Serial.print("\tAY");
     Serial.print(mean_ay);
-    Serial.print("\t");
+    Serial.print("\tAZ");
     Serial.print(mean_az);
-    Serial.print("\t");
+    Serial.print("\tGX");
     Serial.print(mean_gx);
-    Serial.print("\t");
+    Serial.print("\tGY");
     Serial.print(mean_gy);
-    Serial.print("\t");
+    Serial.print("\tGZ");
     Serial.println(mean_gz);
-    Serial.print("Your offsets:\t");
+    Serial.println("Your offsets:");
+    Serial.print("AX");
     Serial.print(ax_offset);
-    Serial.print("\t");
+    Serial.print("\tAY");
     Serial.print(ay_offset);
-    Serial.print("\t");
+    Serial.print("\tAZ");
     Serial.print(az_offset);
-    Serial.print("\t");
+    Serial.print("\tGX");
     Serial.print(gx_offset);
-    Serial.print("\t");
+    Serial.print("\tGY");
     Serial.print(gy_offset);
-    Serial.print("\t");
+    Serial.print("\tGZ");
     Serial.println(gz_offset);
-    Serial.println("\nData is printed as: acelX acelY acelZ giroX giroY giroZ");
-    while(true);
   }
 }
 

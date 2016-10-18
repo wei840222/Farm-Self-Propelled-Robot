@@ -6,14 +6,18 @@
 class Motor {
   private:
     int pinA, pinB, pinPWM;
-    int reverse = 1;
+    int reverse;
     const static int powerMax = 255;
 
   public:
+    int defaut;
+
     void init(int A, int B, int PWM) {
       pinA = A;
       pinB = B;
       pinPWM = PWM;
+      reverse = 1;
+      defaut = 0;
       pinMode (pinA, OUTPUT);
       pinMode (pinB, OUTPUT);
       pinMode (pinPWM, OUTPUT);
@@ -43,6 +47,16 @@ class Motor {
         digitalWrite(pinB, HIGH);
         analogWrite(pinPWM, abs(power));
       }
+    }
+
+    void fwd() {
+      output(defaut);
+    }
+
+    void back() {
+      setReverse();
+      output(defaut);
+      setReverse();
     }
 };
 
@@ -77,17 +91,12 @@ class Ultrasonic {
 };
 
 ///////////////////////////////////   全域變數   ///////////////////////////////////
-int motorForwardLeftDefaut;            //左前馬達基速
-int motorForwardRightDefaut;           //右前馬達基速
-int motorBackLeftDefaut;               //左後馬達基速
-int motorBackRightDefaut;              //右後馬達基速
-
 int stage = 0;                  //關卡編號
-int count = 0;                  //計數盆栽
+
 ///////////////////////////////////   建立裝置物件   ///////////////////////////////////
 MPU6050 mpu;
 Ultrasonic ultL, ultR, ultF, ultB;
-Motor motFL, motFR, motBL, motBR;
+Motor motLF, motLB, motRF, motRB;
 Servo serB, serL, serR;
 LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
 
@@ -106,10 +115,10 @@ void setup() {
   ultB.init(32, 33);
 
   //初始化左右輪馬達
-  motFL.init(22, 23, 3);
-  motBL.init(37, 38, 8);
-  motFR.init(24, 25, 4);
-  motBR.init(39, 40, 9);
+  motLF.init(22, 23, 3);
+  motRF.init(24, 25, 4);
+  motLB.init(37, 38, 8);
+  motRB.init(39, 40, 9);
 
   //初始化抽水馬達
   pinMode (34, OUTPUT);
@@ -134,9 +143,8 @@ void setup() {
 }
 
 void loop() {
-  pause();
-  /*
+  lcd.clear();
+  waitForPause();
   stageEvent();
   if (!avoidance()) fixStraight();
-  */
 }
