@@ -1,24 +1,43 @@
+///////////////////////////////////   顯示資訊   ///////////////////////////////////
+void showData() {
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Stage:");
+  lcd.print(stage);
+  lcd.print(" A:");
+  lcd.print(mpuGetAngle());
+  lcd.setCursor(0, 1);
+  lcd.print("L:");
+  lcd.print(ultL.distanceCM());
+  lcd.print(" R:");
+  lcd.print(ultR.distanceCM());
+  Serial.print("A:");
+  Serial.print(mpuGetAngle());
+  Serial.print(" L:");
+  Serial.print(ultL.distanceCM());
+  Serial.print(" R:");
+  Serial.println(ultR.distanceCM());
+}
 ///////////////////////////////////   判斷關卡特殊事件   ///////////////////////////////////
 void stageEvent() {
   static int count = 0;                  //計數盆栽
 
-  lcd.setCursor(0, 1);
-  lcd.print("Stage:");
-  lcd.print(stage);
-
   switch (stage) {
     case 0:
+      setupMotorDefaut(90, 167 ,113 ,210);
+      goForward();
       break;
 
     case 1:
-      setupMotorDefaut(100, 200, 100, 200);
+      setupMotorDefaut(202, 255 ,255 ,255);
       //偵測右方盆栽
-      lcd.setCursor(0, 8);
+      lcd.setCursor(8, 1);
       lcd.print("Pot:");
       lcd.print(count);
 
-      if (ultR.distanceCM() < 40 && count < 3) {
+      if (ultR.distanceCM() < 50 && count < 3) {
         delay(300);
+        setupMotorDefaut(90, 167 ,113 ,210);
         irrigateRightPot();
         count++;
       }
@@ -87,14 +106,9 @@ void detectChangeStage() {
 ///////////////////////////////////   走直線   ///////////////////////////////////
 void fixStraight() {
   const int fixInterval = 1;                  //角度修正區間
-  const int moreFixInterval = 20;             //加強角度修正區間
+  const int moreFixInterval = 40;             //加強角度修正區間
   const int fixMaxAngle = 90;                 //最大修正角度
   int angle = mpuGetAngle();
-
-  //顯示訊息
-  lcd.setCursor(0, 1);
-  lcd.print("FixingStraight Angle:");
-  lcd.print(mpuGetAngle());
 
   if (abs(angle) > fixMaxAngle) angle = fixMaxAngle * angle / abs(angle);
   if (abs(angle) <= moreFixInterval) angle = moreFixInterval * angle / abs(angle);
@@ -121,13 +135,6 @@ bool avoidance() {
   float distanceL = ultL.distanceCM();
   float distanceR = ultR.distanceCM();
 
-  //顯示訊息
-  lcd.setCursor(0, 1);
-  lcd.print("Avoidancing L:");
-  lcd.print(distanceL);
-  lcd.print(" R:");
-  lcd.print(distanceR);
-
   if (distanceL < minDistance) distanceL = minDistance;
   if (distanceR < minDistance) distanceR = minDistance;
 
@@ -151,7 +158,7 @@ bool avoidance() {
 ///////////////////////////////////   澆灌右邊盆栽   ///////////////////////////////////
 void irrigateRightPot() {
   const int potFindDistance = 50;                //盆栽尋找距離
-  const int potIrrigateDistance = 20;            //澆灌距離
+  const int potIrrigateDistance = 17;            //澆灌距離
   float distance;
 
   //逆時針旋轉尋找盆栽
@@ -166,6 +173,7 @@ void irrigateRightPot() {
   motRF.fwd();
   motRB.fwd();
   while (ultB.distanceCM() > potFindDistance);
+  delay(300);
 
   //停止
   goStop();
@@ -189,7 +197,7 @@ void irrigateRightPot() {
   delay(1000);
 
   //旋轉車體回正
-  rotateToAngle(0);
+  rotateToAngle(1);
 
   //前進
   goForward();
@@ -202,7 +210,7 @@ void waitForStart() {
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print("Device ready!");
-    lcd.setCursor(1, 0);
+    lcd.setCursor(0, 1);
     lcd.print("Stage:");
     lcd.print(stage);
 
@@ -221,11 +229,11 @@ void waitForPause() {
   if (digitalRead(36)) {
     while (digitalRead(36));
 
+    goStop();
+    
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print("Pause");
-
-    goStop();
 
     while (!digitalRead(36));
     while (digitalRead(36));
@@ -313,5 +321,4 @@ void rotateToAngle(int rotationAngle) {
   } while (angle != rotationAngle);
 
   goStop();
-  delay(1000);
 }

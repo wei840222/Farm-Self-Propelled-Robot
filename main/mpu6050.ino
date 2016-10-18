@@ -121,13 +121,13 @@ float mpuGetAngle() {
     // (this lets us immediately read more without waiting for an interrupt)
     fifoCount -= packetSize;
 
-#ifdef OUTPUT_READABLE_YAWPITCHROLL
+//#ifdef OUTPUT_READABLE_YAWPITCHROLL
     // display Euler angles in degrees
     mpu.dmpGetQuaternion(&q, fifoBuffer);
     mpu.dmpGetGravity(&gravity, &q);
     mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
     return ypr[0] * 180 / M_PI + angleFix;
-#endif
+//#endif
   }
 }
 

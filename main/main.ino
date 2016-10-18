@@ -24,7 +24,7 @@ class Motor {
     }
 
     void setReverse() {
-      reverse = -1;
+      reverse *= -1;
     }
 
     void stop() {
@@ -143,8 +143,8 @@ void setup() {
 }
 
 void loop() {
-  lcd.clear();
   waitForPause();
+  showData();
   stageEvent();
   if (!avoidance()) fixStraight();
 }
