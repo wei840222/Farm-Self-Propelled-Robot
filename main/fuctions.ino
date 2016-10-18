@@ -29,15 +29,14 @@ void stageEvent() {
       break;
 
     case 1:
-      setupMotorDefaut(202, 255 ,255 ,255);
+      setupMotorDefaut(90, 167 ,113 ,210);
       //偵測右方盆栽
       lcd.setCursor(8, 1);
       lcd.print("Pot:");
       lcd.print(count);
 
       if (ultR.distanceCM() < 50 && count < 3) {
-        delay(300);
-        setupMotorDefaut(90, 167 ,113 ,210);
+        delay(600);
         irrigateRightPot();
         count++;
       }
@@ -158,7 +157,7 @@ bool avoidance() {
 ///////////////////////////////////   澆灌右邊盆栽   ///////////////////////////////////
 void irrigateRightPot() {
   const int potFindDistance = 50;                //盆栽尋找距離
-  const int potIrrigateDistance = 17;            //澆灌距離
+  const int potIrrigateDistance = 20;            //澆灌距離
   float distance;
 
   //逆時針旋轉尋找盆栽
@@ -195,6 +194,10 @@ void irrigateRightPot() {
   //澆水
   watering(7000);
   delay(1000);
+
+  //前進
+  goForward();
+  delay(500);
 
   //旋轉車體回正
   rotateToAngle(1);
