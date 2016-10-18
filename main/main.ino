@@ -139,12 +139,29 @@ void setup() {
   lcd.begin(16, 2);
 
   //等待選關準備開始
-  waitForStart();
+  //waitForStart();
 }
 
 void loop() {
+  /*
   waitForPause();
   showData();
   stageEvent();
   if (!avoidance()) fixStraight();
+  */
+  serB.write(140);
+  serL.write(120);
+  serR.write(60);
+
+  delay(1000);
+  serL.write(85);
+  serR.write(90);
+  delay(1000);
+  serB.write(80);
+  delay(1000);
+  serL.write(120);
+  serR.write(60);
+  delay(1000);
+  serB.write(140);
+  delay(5000);
 }

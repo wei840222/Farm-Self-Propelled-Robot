@@ -216,7 +216,7 @@ void irrigateRightPot() {
 ///////////////////////////////////   抓取右邊盆栽   ///////////////////////////////////
 void catchRightPot() {
   const int potFindDistance = 50;                //盆栽尋找距離
-  const int potCatchDistance = 20;            //澆灌距離
+  const int potCatchDistance = 12;            //澆灌距離
   float distance;
 
   //逆時針旋轉尋找盆栽
@@ -240,23 +240,23 @@ void catchRightPot() {
   //調整距離
   do {
     distance = ultB.distanceCM();
-    if (distance < potIrrigateDistance)
+    if (distance < potCatchDistance)
       goForward();
-    if (distance > potIrrigateDistance)
+    if (distance > potCatchDistance)
       goBack();
-  } while (distance != potIrrigateDistance);
+  } while (distance != potCatchDistance);
 
   //停車
   goStop();
   delay(1000);
 
   //抓取
-  servoBig.write(80);
+  serB.write(80);
   delay(1000);
-  servoLeft.write(120);
-  servoRight.write(60);
+  serL.write(120);
+  serR.write(60);
   delay(1000);
-  servoBig.write(140);
+  serB.write(140);
   delay(1000);
 
   //前進
