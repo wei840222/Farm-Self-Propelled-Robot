@@ -24,12 +24,12 @@ void stageEvent() {
 
   switch (stage) {
     case 0:
-      setupMotorDefaut(90, 167 ,113 ,210);
+      setupMotorDefaut(90, 167 , 113 , 210);
       goForward();
       break;
 
     case 1:
-      setupMotorDefaut(90, 167 ,113 ,210);
+      setupMotorDefaut(90, 167 , 113 , 210);
       //偵測右方盆栽
       lcd.setCursor(8, 1);
       lcd.print("Pot:");
@@ -44,31 +44,37 @@ void stageEvent() {
       break;
 
     case 2:
-      setupMotorDefaut(100, 200, 100, 200);
+      setupMotorDefaut(90, 167 , 113 , 210);
       detectChangeStage();
       break;
 
     case 3:
-      setupMotorDefaut(90, 180, 120, 240);
+      setupMotorDefaut(90, 167 , 113 , 210);
       break;
 
     case 4:
-      setupMotorDefaut(100, 200, 100, 200);
+      setupMotorDefaut(90, 167 , 113 , 210);
       detectChangeStage();
       break;
 
     case 5:
-      setupMotorDefaut(100, 200, 100, 200);
+      setupMotorDefaut(90, 167 , 113 , 210);
       detectChangeStage();
       break;
 
     case 6:
-      setupMotorDefaut(100, 200, 100, 200);
+      setupMotorDefaut(90, 167 , 113 , 210);
       detectChangeStage();
       break;
 
     case 7:
-      setupMotorDefaut(100, 200, 100, 200);
+      setupMotorDefaut(90, 167 , 113 , 210);
+      if (ultR.distanceCM() < 50 && count < 3) {
+        delay(600);
+        catchRightPot();
+        count++;
+      }
+
       detectChangeStage();
       break;
 
@@ -207,6 +213,64 @@ void irrigateRightPot() {
   delay(1000);
 }
 
+///////////////////////////////////   抓取右邊盆栽   ///////////////////////////////////
+void catchRightPot() {
+  const int potFindDistance = 50;                //盆栽尋找距離
+  const int potCatchDistance = 20;            //澆灌距離
+  float distance;
+
+  //逆時針旋轉尋找盆栽
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("L-Rotate");
+  lcd.setCursor(0, 1);
+  lcd.print("Find Pot");
+
+  motLF.back();
+  motLB.back();
+  motRF.fwd();
+  motRB.fwd();
+  while (ultB.distanceCM() > potFindDistance);
+  delay(300);
+
+  //停止
+  goStop();
+  delay(1000);
+
+  //調整距離
+  do {
+    distance = ultB.distanceCM();
+    if (distance < potIrrigateDistance)
+      goForward();
+    if (distance > potIrrigateDistance)
+      goBack();
+  } while (distance != potIrrigateDistance);
+
+  //停車
+  goStop();
+  delay(1000);
+
+  //抓取
+  servoBig.write(80);
+  delay(1000);
+  servoLeft.write(120);
+  servoRight.write(60);
+  delay(1000);
+  servoBig.write(140);
+  delay(1000);
+
+  //前進
+  goForward();
+  delay(500);
+
+  //旋轉車體回正
+  rotateToAngle(1);
+
+  //前進
+  goForward();
+  delay(1000);
+}
+
 ///////////////////////////////////   其他   ///////////////////////////////////
 void waitForStart() {
   while (!digitalRead(36)) {
@@ -233,7 +297,7 @@ void waitForPause() {
     while (digitalRead(36));
 
     goStop();
-    
+
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print("Pause");
