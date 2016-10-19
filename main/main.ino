@@ -162,4 +162,5 @@ void loop() {
   Serial.println(ultR.distanceCM());
   stageEvent();
   if (!avoidance()) fixStraight();
+  waitForPause();
 }

@@ -240,13 +240,10 @@ void catchPot() {
   lcd.setCursor(0, 0);
   lcd.print("Catch Pot");
 
-  serL.write(120);
-  serR.write(60);
-  delay(1000);
   serB.write(80);
   delay(1000);
-  serL.write(85);
-  serR.write(90);
+  serL.write(120);
+  serR.write(60);
   delay(1000);
   serB.write(140);
   delay(5000);
@@ -357,14 +354,15 @@ void waitForStart() {
   }
 }
 
-void pause() {
+void waitForPause() {
+  if (digitalRead(36)) {
+    goStop();
 
-  goStop();
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Pause");
 
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Pause");
-
-  while (!digitalRead(36));
-  while (digitalRead(36));
+    while (!digitalRead(36));
+    while (digitalRead(36));
+  }
 }
