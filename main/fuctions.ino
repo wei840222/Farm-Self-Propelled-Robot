@@ -157,7 +157,7 @@ void fixStraight() {
   const int fixInterval = 1;                  //角度修正區間
   const int moreFixInterval = 40;             //加強角度修正區間
   const int fixMaxAngle = 90;                 //最大修正角度
-  float angle = calculateAngle();
+  int angle = calculateAngle();
 
   lcd.setCursor(0, 1);
   lcd.print("Angle:");
