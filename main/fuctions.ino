@@ -216,18 +216,20 @@ bool avoidance() {
 
 ///////////////////////////////////   尋找後方盆栽   ///////////////////////////////////
 void findBackPot(int dis) {
-  lcd.setCursor(0, 0);
-  lcd.print("Find Pot");
-  lcd.setCursor(0, 1);
-  lcd.print(dis);
-  lcd.print("/");
-  lcd.print(ultB.distanceCM());
-
+  float distance;
   motLF.back();
   motLB.back();
   motRF.fwd();
   motRB.fwd();
-  while (ultB.distanceCM() > dis);
+  do {
+    distance = ultB.distanceCM();
+    lcd.setCursor(0, 0);
+    lcd.print("Find Pot");
+    lcd.setCursor(0, 1);
+    lcd.print(dis);
+    lcd.print("/");
+    lcd.print(distance);
+  } while (distance < dis);
 }
 
 ///////////////////////////////////   調整前方距離   ///////////////////////////////////
