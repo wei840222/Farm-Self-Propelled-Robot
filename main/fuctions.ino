@@ -7,11 +7,6 @@ void stageEvent() {
 
   switch (stage) {
     case 0:
-      
-        fixBackDis(22);
-        rotateToAngle(10);
-        while (1);
-      
       break;
 
     case 1:
