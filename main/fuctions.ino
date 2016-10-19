@@ -117,18 +117,19 @@ void stageEvent() {
         goStop();
         delay(1000);
         goForward();
-        delay(1500);
+        delay(1000);
         potCount++;
       }
 
       if (ultR.distanceCM() < 50 && potCount == 2) {
-        delay(600);
+        delay(900);
         goStop();
         rotateL();
-        delay(2000);
+        delay(1000);
         goStop();
         delay(1000);
-        fixBackDis(5);
+        goBack();
+        delay(100);
         goStop();
         delay(1000);
         putPot();
