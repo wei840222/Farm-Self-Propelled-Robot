@@ -1,17 +1,5 @@
-///////////////////////////////////   顯示資訊   ///////////////////////////////////
-void showData() {
-  Serial.print("A:");
-  Serial.print(mpuGetAngle());
-  Serial.print(" L:");
-  Serial.print(ultL.distanceCM());
-  Serial.print(" R:");
-  Serial.println(ultR.distanceCM());
-}
-
 ///////////////////////////////////   判斷關卡特殊事件   ///////////////////////////////////
 void stageEvent() {
-  static int count = 0;                  //計數盆栽
-
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("Stage:");
@@ -24,26 +12,27 @@ void stageEvent() {
     case 1:
       //偵測右方盆栽
       lcd.print(" Pot:");
-      lcd.print(count);
-      lcd.setCursor(0, 1);
-      lcd.print("DisR:");
-      lcd.print(ultR.distanceCM());
+      lcd.print(potCount);
 
       if (ultR.distanceCM() < 50 && count < 3) {
-        delay(600);
-        goStop();
-        findBackPot(50);
-        delay(1000);
-        fixBackDis(20);
-        delay(1000);
-        watering(7000);
-        delay(1000);
-        goForward();
-        delay(500);
-        rotateToAngle(1);
-        goForward();
-        delay(1000);
-        count++;
+        if (skipPot == 0) {
+          delay(600);
+          goStop();
+          findBackPot(50);
+          delay(1000);
+          fixBackDis(20);
+          delay(1000);
+          watering(7000);
+          delay(1000);
+          goForward();
+          delay(500);
+          rotateToAngle(1);
+          goForward();
+          delay(1000);
+          count++;
+        }
+        else
+          skipPot--;
       }
 
       if (ultF.distanceCM() < 35 && ultL.distanceCM() < 50) {
@@ -183,10 +172,11 @@ bool avoidance() {
 ///////////////////////////////////   尋找後方盆栽   ///////////////////////////////////
 void findBackPot(int dis) {
   lcd.setCursor(0, 0);
-  lcd.print("Find Pot:");
-  lcd.print(ultB.distanceCM());
-  lcd.print("/");
+  lcd.print("Find Pot");
+  lcd.setCursor(0, 1);
   lcd.print(dis);
+  lcd.print("/");
+  lcd.print(ultB.distanceCM());
 
   motLF.back();
   motLB.back();
@@ -200,10 +190,11 @@ void findBackPot(int dis) {
 ///////////////////////////////////   調整後方距離   ///////////////////////////////////
 void fixBackDis(int dis) {
   lcd.setCursor(0, 0);
-  lcd.print("Fix Dis:");
-  lcd.print(ultB.distanceCM());
-  lcd.print("/");
+  lcd.print("Fix Dis");
+  lcd.setCursor(0, 1);
   lcd.print(dis);
+  lcd.print("/");
+  lcd.print(ultB.distanceCM());
 
   do {
     distance = ultB.distanceCM();
@@ -220,6 +211,9 @@ void watering(int time) {
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("Water");
+  lcd.setCursor(0, 1);
+  lcd.print(time / 1000);
+  lcd.print("s");
 
   digitalWrite(34, HIGH);
   delay(time);
@@ -236,7 +230,6 @@ void catchPot() {
 
 ///////////////////////////////////   開始暫停鈕   ///////////////////////////////////
 void waitForStart() {
-  static int skipPot = 0;                //略過澆灌幾個盆栽
   while (!digitalRead(36)) {
     lcd.clear();
     lcd.setCursor(0, 0);
@@ -314,7 +307,7 @@ void goBack() {
 
 void goStop() {
   lcd.clear();
-  lcd.setCursor(0, 1);
+  lcd.setCursor(0, 0);
   lcd.print("Stop");
 
   motLF.stop();
@@ -326,16 +319,17 @@ void goStop() {
 void rotateToAngle(int rotationAngle) {
   const int error = 1;
   int angle;
-  while (abs(mpuGetAngle() - rotationAngle) > 1) {
+  while (abs(mpuGetAngle() - rotationAngle) > error) {
     do {
       angle = mpuGetAngle();
 
       lcd.clear();
       lcd.setCursor(0, 0);
-      lcd.print("Rotate:");
-      lcd.print(angle);
-      lcd.print("/");
+      lcd.print("Rotate");
+      lcd.setCursor(0, 1);
       lcd.print(rotationAngle);
+      lcd.print("/");
+      lcd.print(angle);
 
       if (angle > rotationAngle) {
         motLF.back();

@@ -94,8 +94,10 @@ class Ultrasonic {
     }
 };
 
-///////////////////////////////////   全域變數   ///////////////////////////////////
+///////////////////////////////////   關卡控制   ///////////////////////////////////
 int stage = 0;                  //關卡編號
+int potCount = 0;               //計數盆栽
+int skipPot = 0;                //略過澆灌幾個盆栽
 
 ///////////////////////////////////   建立裝置物件   ///////////////////////////////////
 MPU6050 mpu;
@@ -151,6 +153,14 @@ void setup() {
 }
 
 void loop() {
+  /*
+  Serial.print("A:");
+  Serial.print(mpuGetAngle());
+  Serial.print(" L:");
+  Serial.print(ultL.distanceCM());
+  Serial.print(" R:");
+  Serial.println(ultR.distanceCM());
+  */
   showData();
   stageEvent();
   if (!avoidance()) fixStraight();
