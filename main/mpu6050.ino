@@ -87,10 +87,37 @@ float mpuGetAngle() {
 }
 
 int calculateAngle() {
-  int angle = mpuGetAngle() - stageAngle;
-  if(angle < -180)
-    angle += 360;
-  return angle;
+  const int num = 5;
+  int angle[num];
+  int sigama[num];
+  int maxValue;
+  int fail;
+  int meanAngle = 0;
+  for (int i = 0; i < num; i++)
+    angle[i] = mpuGetAngle();
+
+  for (int i = 0; i < num; i++)
+    for (int j = 0; j < num; j++)
+      sigama[i] += abs(angle[i] - angle[j]);
+
+  maxValue = sigama[0];
+  for (int i = 0; i < num; i++)
+    if (sigama[i] > maxValue) {
+      maxValue = sigama[i];
+      fail = i;
+    }
+
+  for (int i = 0; i < num; i++) {
+    meanAngle += angle[i];
+    if (i == fail)
+      meanAngle -= angle[i];
+  }
+  
+  meanAngle = meanAngle / 19 - stageAngle;
+
+  if (meanAngle < -180)
+    meanAngle += 360;
+  return meanAngle;
 }
 
 void mpuOffset() {
