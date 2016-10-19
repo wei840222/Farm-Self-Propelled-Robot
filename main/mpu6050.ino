@@ -87,21 +87,19 @@ float mpuGetAngle() {
 }
 
 float calculateAngle() {
-  const int num = 20;
-  float angles[num];
-  float sigama = stats.stderror(angles,num);
-  float mean = stats.average(angles,num);
+  const int num = 5;
+  float angles[num * 4];
   float angle = 0;
-  int count = 0;
-  
-  for (int i = 0; i < num; i++) {
-    if (abs(angles[i] - mean) < sigama) {
+
+  for (int i = 0; i < num * 4; i++)
+    angles[i] = mpuGetAngle();
+
+  stats.bubbleSort(angles, num * 4);
+
+  for (int i = num; i < (num * 3 - 1); i++)
       angle += angles[i];
-      count++;
-    }
-  }
-  
-  angle = angle / count - stageAngle;
+
+  angle /= (num * 2);
 
   if (angle < -180)
     angle += 360;

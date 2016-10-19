@@ -157,14 +157,14 @@ void setup() {
 }
 
 void loop() {
-/*
+
   Serial.print("A:");
   Serial.print(calculateAngle());
   Serial.print(" L:");
   Serial.print(ultL.distanceCM());
   Serial.print(" R:");
   Serial.println(ultR.distanceCM());
-*/ 
+
   stageEvent();
   if (!avoidance()) fixStraight();
   waitForPause();
