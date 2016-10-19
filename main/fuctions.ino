@@ -113,7 +113,7 @@ void stageEvent() {
         delay(1000);
         goForward();
         delay(500);
-        rotateToAngle(3);
+        rotateToAngle(2);
         goStop();
         delay(1000);
         goForward();
@@ -125,18 +125,17 @@ void stageEvent() {
         delay(900);
         goStop();
         rotateL();
-        delay(1000);
+        delay(1500);
         goStop();
         delay(1000);
-        goBack();
-        delay(100);
+        fixFrontDis(50);
         goStop();
         delay(1000);
         putPot();
         delay(1000);
         goForward();
         delay(500);
-        rotateToAngle(0);
+        rotateToAngle(2);
         goStop();
         delay(1000);
         goForward();
@@ -233,6 +232,23 @@ void findBackPot(int dis) {
   motRF.fwd();
   motRB.fwd();
   while (ultB.distanceCM() > dis);
+}
+
+///////////////////////////////////   調整前方距離   ///////////////////////////////////
+void fixFrontDis(int dis) {
+  lcd.setCursor(0, 0);
+  lcd.print("Fix Dis");
+  lcd.setCursor(0, 1);
+  lcd.print(dis);
+  lcd.print("/");
+  lcd.print(ultF.distanceCM());
+
+  do {
+    if (ultF.distanceCM() < dis)
+      goBack();
+    if (ultF.distanceCM() > dis)
+      goForward();
+  } while (ultF.distanceCM() != dis);
 }
 
 ///////////////////////////////////   調整後方距離   ///////////////////////////////////
@@ -346,7 +362,7 @@ void rotateR() {
 }
 
 void rotateToAngle(int rotationAngle) {
-  const int error = 2;
+  const int error = 1;
   int angle;
   do {
     angle = calculateAngle();
