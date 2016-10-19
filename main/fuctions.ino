@@ -7,8 +7,6 @@ void stageEvent() {
 
   switch (stage) {
     case 0:
-      rotateToAngle(-82);
-      while (true);
       break;
 
     case 1:
@@ -38,7 +36,7 @@ void stageEvent() {
       }
 
       if (ultF.distanceCM() < 35 && ultL.distanceCM() < 50) {
-        rotateToAngle(85);
+        rotateToAngle(82);
         mpuInit();
         delay(1000);
         stage++;
@@ -47,7 +45,7 @@ void stageEvent() {
 
     case 2:
       if (ultF.distanceCM() < 35 && ultL.distanceCM() < 50) {
-        rotateToAngle(85);
+        rotateToAngle(82);
         mpuInit();
         delay(1000);
         stage++;
@@ -59,7 +57,7 @@ void stageEvent() {
 
     case 4:
       if (ultF.distanceCM() < 35 && ultR.distanceCM() < 50) {
-        rotateToAngle(85);
+        rotateToAngle(-82);
         mpuInit();
         delay(1000);
         stage++;
@@ -71,7 +69,7 @@ void stageEvent() {
 
     case 6:
       if (ultF.distanceCM() < 35 && ultL.distanceCM() < 50) {
-        rotateToAngle(85);
+        rotateToAngle(82);
         mpuInit();
         delay(1000);
         stage++;
@@ -241,7 +239,7 @@ void catchPot() {
 
 ///////////////////////////////////   開始暫停鈕   ///////////////////////////////////
 void waitForStart() {
-  while (!digitalRead(36)) {
+  while (!digitalRead(4)) {
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print("Stage:");
@@ -255,13 +253,13 @@ void waitForStart() {
     }
     delay(100);
   }
-  while (digitalRead(36));
+  while (digitalRead(4));
 
   if (stage == 1) {
-    while (!digitalRead(36)) {
+    while (!digitalRead(4)) {
       lcd.clear();
       lcd.setCursor(0, 0);
-      lcd.print("Stage:0");
+      lcd.print("Stage:1");
       lcd.setCursor(0, 1);
       lcd.print("Skip Pot:");
       lcd.print(skipPot);
@@ -273,13 +271,11 @@ void waitForStart() {
       }
       delay(100);
     }
-    while (digitalRead(36));
+    while (digitalRead(4));
   }
 }
 
-void waitForPause() {
-  if (digitalRead(36)) {
-    while (digitalRead(36));
+void pause() {
 
     goStop();
 
@@ -287,9 +283,8 @@ void waitForPause() {
     lcd.setCursor(0, 0);
     lcd.print("Pause");
 
-    while (!digitalRead(36));
-    while (digitalRead(36));
-  }
+    while (!digitalRead(4));
+    while (digitalRead(4));
 }
 
 ///////////////////////////////////   車體動作   ///////////////////////////////////

@@ -121,8 +121,8 @@ void setup() {
   ultB.init(32, 33);
 
   //初始化左右輪馬達並設定基值
-  motLF.init(22, 23, 3);
-  motRF.init(24, 25, 4);
+  motLF.init(22, 23, 10);
+  motRF.init(24, 25, 11);
   motLB.init(37, 38, 8);
   motRB.init(39, 40, 9);
   motLF.setDefaut(90);
@@ -143,25 +143,24 @@ void setup() {
 
   //初始化按鈕
   pinMode (35, INPUT);
-  pinMode (36, INPUT);
+  pinMode (4, INPUT);
 
   //初始化LCD
   lcd.begin(16, 2);
 
   //等待選關準備開始
   waitForStart();
+
+  attachInterrupt(1, pause, CHANGE);
 }
 
 void loop() {
-  /*
   Serial.print("A:");
   Serial.print(mpuGetAngle());
   Serial.print(" L:");
   Serial.print(ultL.distanceCM());
   Serial.print(" R:");
   Serial.println(ultR.distanceCM());
-  */
   stageEvent();
   if (!avoidance()) fixStraight();
-  waitForPause();
 }
