@@ -7,9 +7,11 @@ void stageEvent() {
 
   switch (stage) {
     case 0:
-      fixBackDis(22);
-      rotateToAngle(0);
-      while (1);
+      
+        fixBackDis(22);
+        rotateToAngle(10);
+        while (1);
+      
       break;
 
     case 1:
@@ -234,19 +236,20 @@ void findBackPot(int dis) {
 }
 
 ///////////////////////////////////   調整前方距離   ///////////////////////////////////
-void fixFrontDis(int dis) {
+void fixFrontDis(float dis) {
   const float error = 0.5;
   float distance;
 
-  lcd.setCursor(0, 0);
-  lcd.print("Fix Dis");
-  lcd.setCursor(0, 1);
-  lcd.print(dis);
-  lcd.print("/");
-  lcd.print(ultF.distanceCM());
-
   do {
     distance = ultF.distanceCM();
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Fix Front Dis");
+    lcd.setCursor(0, 1);
+    lcd.print(dis);
+    lcd.print("/");
+    lcd.print(distance);
+
     if (distance < dis)
       goBack();
     if (distance > dis)
@@ -255,23 +258,24 @@ void fixFrontDis(int dis) {
 }
 
 ///////////////////////////////////   調整後方距離   ///////////////////////////////////
-void fixBackDis(int dis) {
+void fixBackDis(float dis) {
   const float error = 0.5;
   float distance;
 
-  lcd.setCursor(0, 0);
-  lcd.print("Fix Dis");
-  lcd.setCursor(0, 1);
-  lcd.print(dis);
-  lcd.print("/");
-  lcd.print(ultF.distanceCM());
-
   do {
-    distance = ultF.distanceCM();
+    distance = ultB.distanceCM();
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Fix Back Dis");
+    lcd.setCursor(0, 1);
+    lcd.print(dis);
+    lcd.print("/");
+    lcd.print(distance);
+
     if (distance < dis)
-      goForward();
-    if (distance > dis)
       goBack();
+    if (distance > dis)
+      goForward();
   } while (abs(distance - dis) > error);
 }
 
@@ -356,7 +360,7 @@ void rotateR() {
   motRB.back();
 }
 
-void rotateToAngle(int rotationAngle) {
+void rotateToAngle(float rotationAngle) {
   const float error = 1;
   float angle;
   do {
