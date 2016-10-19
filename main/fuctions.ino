@@ -20,16 +20,19 @@ void stageEvent() {
           goStop();
           findBackPot(50);
           delay(800);
+          goStop();
+          delay(1000);
           fixBackDis(22);
+          goStop();
           delay(1000);
           watering(6000);
           delay(1000);
           goForward();
           delay(300);
           rotateToAngle(0);
-          goForward();
-          delay(1000);
           goStop();
+          delay(1000);
+          goForward();
           potCount++;
         }
         else {
@@ -77,7 +80,6 @@ void stageEvent() {
         delay(1000);
         stage++;
         stageAngle += 90;
-        skipPot = 1;
       }
       break;
 
@@ -86,29 +88,48 @@ void stageEvent() {
       lcd.print(" Pot:");
       lcd.print(potCount);
 
-      if (ultR.distanceCM() < 50 && potCount < 3) {
-        if (skipPot == 0) {
-          delay(600);
-          goStop();
-          findBackPot(50);
-          delay(800);
-          fixBackDis(22);
-          delay(1000);
-          watering(6000);
-          delay(1000);
-          goForward();
-          delay(500);
-          rotateToAngle(1);
-          goForward();
-          delay(500);
-          goStop();
-          potCount++;
-        }
-        else {
-          skipPot--;
-          potCount++;
-        }
-        delay(3000);
+      if (ultR.distanceCM() < 50 && potCount == 1) {
+        delay(600);
+        goStop();
+        findBackPot(50);
+        delay(800);
+        goStop();
+        delay(1000);
+        fixBackDis(12);
+        goStop();
+        delay(1000);
+        catchPot();
+        delay(1000);
+        goForward();
+        delay(300);
+        rotateToAngle(0);
+        goStop();
+        delay(1000);
+        goForward();
+        delay(1000);
+        potCount++;
+      }
+
+      if (ultR.distanceCM() < 50 && potCount == 2) {
+        delay(600);
+        goStop();
+        rotateL();
+        delay(2000);
+        goStop();
+        delay(1000);
+        fixBackDis(5);
+        goStop();
+        delay(1000);
+        putPot();
+        delay(1000);
+        goForward();
+        delay(500);
+        rotateToAngle(0);
+        goStop();
+        delay(1000);
+        goForward();
+        delay(1000);
+        potCount++;
       }
 
       if (ultF.distanceCM() < 50 && ultL.distanceCM() < 50) {
@@ -200,8 +221,6 @@ void findBackPot(int dis) {
   motRF.fwd();
   motRB.fwd();
   while (ultB.distanceCM() > dis);
-  delay(300);
-  goStop();
 }
 
 ///////////////////////////////////   調整後方距離   ///////////////////////////////////
@@ -219,7 +238,6 @@ void fixBackDis(int dis) {
     if (ultB.distanceCM() > dis)
       goBack();
   } while (ultB.distanceCM() != dis);
-  goStop();
 }
 
 ///////////////////////////////////   澆水   ///////////////////////////////////
@@ -249,6 +267,21 @@ void catchPot() {
   delay(1000);
   serB.write(140);
   delay(5000);
+}
+
+///////////////////////////////////   放盆栽   ///////////////////////////////////
+void putPot() {
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("put Pot");
+
+  serB.write(80);
+  delay(1000);
+  serL.write(90);
+  serR.write(85);
+  delay(1000);
+  serB.write(140);
+  delay(1000);
 }
 
 ///////////////////////////////////   車體動作   ///////////////////////////////////
@@ -286,6 +319,20 @@ void goStop() {
   motRB.stop();
 }
 
+void rotateL() {
+  motLF.back();
+  motLB.back();
+  motRF.fwd();
+  motRB.fwd();
+}
+
+void rotateR() {
+  motLF.fwd();
+  motLB.fwd();
+  motRF.back();
+  motRB.back();
+}
+
 void rotateToAngle(int rotationAngle) {
   const int error = 20;
   int angle;
@@ -314,8 +361,6 @@ void rotateToAngle(int rotationAngle) {
       motRB.back();
     }
   } while (angle != rotationAngle);
-  goStop();
-  delay(1500);
 }
 
 ///////////////////////////////////   開始暫停鈕   ///////////////////////////////////
