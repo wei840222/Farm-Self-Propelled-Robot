@@ -113,7 +113,7 @@ void stageEvent() {
         delay(1000);
         goForward();
         delay(500);
-        rotateToAngle(1);
+        rotateToAngle(3);
         goStop();
         delay(1000);
         goForward();
@@ -277,7 +277,7 @@ void catchPot() {
   serL.write(120);
   serR.write(60);
   delay(1000);
-  serB.write(140);
+  serB.write(120);
   delay(1000);
 }
 
