@@ -7,10 +7,6 @@ void stageEvent() {
 
   switch (stage) {
     case 0:
-      catchPot();
-      delay(3000);
-      putPot();
-      while (true);
       break;
 
     case 1:
@@ -48,7 +44,7 @@ void stageEvent() {
         }
       }
 
-      if (ultF.distanceCM() < 35 && ultL.distanceCM() < 50) {
+      if (ultF.distanceCM() < 35 && ultL.distanceCM() < 50 && potCount == 3) {
         rotateToAngle(82);
         delay(1000);
         stage++;
@@ -113,7 +109,7 @@ void stageEvent() {
         delay(1000);
         goForward();
         delay(500);
-        rotateToAngle(-1);
+        rotateToAngle(-2);
         goStop();
         delay(1000);
         goForward();
@@ -135,7 +131,7 @@ void stageEvent() {
         delay(1000);
         goForward();
         delay(500);
-        rotateToAngle(-1);
+        rotateToAngle(-2);
         goStop();
         delay(1000);
         goForward();

@@ -67,8 +67,9 @@ class Motor {
 class Ultrasonic {
   private:
     int pinTrig, pinEcho;
-    int duration, distance;
-    const static int distanceMax = 100;
+    int duration;
+    float distance;
+    const static float distanceMax = 100;
 
   public:
     void init(int trig, int echo) {
@@ -154,14 +155,14 @@ void setup() {
 }
 
 void loop() {
-  /*
+
   Serial.print("A:");
   Serial.print(calculateAngle());
   Serial.print(" L:");
   Serial.print(ultL.distanceCM());
   Serial.print(" R:");
   Serial.println(ultR.distanceCM());
-  */
+  
   stageEvent();
   if (!avoidance()) fixStraight();
   waitForPause();
