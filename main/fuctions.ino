@@ -215,7 +215,7 @@ bool avoidance() {
 }
 
 ///////////////////////////////////   尋找後方盆栽   ///////////////////////////////////
-void findBackPot(int dis) {
+void findBackPot(float dis) {
   float distance;
   motLF.back();
   motLB.back();
