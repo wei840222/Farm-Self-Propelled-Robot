@@ -269,7 +269,7 @@ void catchPot() {
   serL.write(120);
   serR.write(60);
   delay(1000);
-  serB.write(140);
+  serB.write(120);
   delay(1000);
 }
 
