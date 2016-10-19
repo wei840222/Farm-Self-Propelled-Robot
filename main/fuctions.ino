@@ -270,9 +270,9 @@ void fixBackDis(float dis) {
     lcd.print(distance);
 
     if (distance < dis)
-      goBack();
-    if (distance > dis)
       goForward();
+    if (distance > dis)
+      goBack();
   } while (abs(distance - dis) > error);
 }
 
