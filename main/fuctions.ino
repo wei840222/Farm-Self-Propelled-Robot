@@ -106,7 +106,7 @@ void stageEvent() {
         findBackPot(50);
         goStop();
         delay(1000);
-        fixBackDis(12);
+        fixBackDis(15);
         goStop();
         delay(1000);
         catchPot();
