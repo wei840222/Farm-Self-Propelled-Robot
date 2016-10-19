@@ -102,14 +102,15 @@ void stageEvent() {
         findBackPot(50);
         goStop();
         delay(1000);
-        fixBackDis(14);
+        fixBackDis(15);
         goStop();
         delay(1000);
         catchPot();
         delay(1000);
         goForward();
         delay(500);
-        rotateToAngle(-2);
+        rotateR();
+        delay(1500);
         goStop();
         delay(1000);
         goForward();
@@ -131,7 +132,8 @@ void stageEvent() {
         delay(1000);
         goForward();
         delay(500);
-        rotateToAngle(-2);
+        rotateR();
+        delay(1500);
         goStop();
         delay(1000);
         goForward();
@@ -139,12 +141,12 @@ void stageEvent() {
         potCount++;
       }
 
-      if (ultF.distanceCM() < 50 && ultL.distanceCM() < 50 && potCount == 3) {
+      if (ultF.distanceCM() < 50 && potCount == 3) {
         goStop();
         lcd.clear();
         lcd.setCursor(0, 0);
         lcd.print("Clear!");
-        lcd.setCursor(1, 0);
+        lcd.setCursor(0, 1);
         lcd.print("Fuck all!");
         while (true);
       }
