@@ -229,7 +229,7 @@ void findBackPot(float dis) {
     lcd.print(dis);
     lcd.print("/");
     lcd.print(distance);
-  } while (distance < dis);
+  } while (distance > dis);
 }
 
 ///////////////////////////////////   調整前方距離   ///////////////////////////////////
