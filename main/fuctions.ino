@@ -106,14 +106,14 @@ void stageEvent() {
         findBackPot(50);
         goStop();
         delay(1000);
-        fixBackDis(15);
+        fixBackDis(14);
         goStop();
         delay(1000);
         catchPot();
         delay(1000);
         goForward();
         delay(500);
-        rotateToAngle(0);
+        rotateToAngle(1);
         goStop();
         delay(1000);
         goForward();
@@ -144,7 +144,7 @@ void stageEvent() {
         potCount++;
       }
 
-      if (ultF.distanceCM() < 50 && ultL.distanceCM() < 50) {
+      if (ultF.distanceCM() < 50 && ultL.distanceCM() < 50 && potCount == 3) {
         goStop();
         lcd.clear();
         lcd.setCursor(0, 0);
