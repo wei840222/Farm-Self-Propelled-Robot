@@ -236,23 +236,41 @@ void catchPot() {
 
 ///////////////////////////////////   開始暫停鈕   ///////////////////////////////////
 void waitForStart() {
+  static int skipPot = 0;                //略過澆灌幾個盆栽
   while (!digitalRead(36)) {
     lcd.clear();
     lcd.setCursor(0, 0);
-    lcd.print("Device ready!");
-    lcd.setCursor(0, 1);
     lcd.print("Stage:");
     lcd.print(stage);
 
     if (digitalRead(35)) {
       stage++;
-      if (stage > 7) stage = 0;
+      if (stage > 7)
+        stage = 0;
       while (digitalRead(35));
     }
-
-    delay(200);
+    delay(100);
   }
   while (digitalRead(36));
+
+  if (stage == 0) {
+    while (!digitalRead(36)) {
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Stage:0");
+      lcd.setCursor(0, 1);
+      lcd.print("Skip Pot:");
+      lcd.print(skipPot);
+      if (digitalRead(35)) {
+        skipPot++;
+        if (skipPot > 3)
+          skipPot = 0;
+        while (digitalRead(35));
+      }
+      delay(100);
+    }
+    while (digitalRead(36));
+  }
 }
 
 void waitForPause() {
