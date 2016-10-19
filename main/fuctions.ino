@@ -7,11 +7,6 @@ void stageEvent() {
 
   switch (stage) {
     case 0:
-      
-        fixBackDis(22);
-        rotateToAngle(10);
-        while (1);
-      
       break;
 
     case 1:
@@ -107,14 +102,15 @@ void stageEvent() {
         findBackPot(50);
         goStop();
         delay(1000);
-        fixBackDis(14);
+        fixBackDis(15);
         goStop();
         delay(1000);
         catchPot();
         delay(1000);
         goForward();
         delay(500);
-        rotateToAngle(-2);
+        rotateR();
+        delay(1600);
         goStop();
         delay(1000);
         goForward();
@@ -126,7 +122,7 @@ void stageEvent() {
         delay(900);
         goStop();
         rotateL();
-        delay(1500);
+        delay(1600);
         goStop();
         delay(1000);
         fixFrontDis(40);
@@ -136,7 +132,8 @@ void stageEvent() {
         delay(1000);
         goForward();
         delay(500);
-        rotateToAngle(-2);
+        rotateR();
+        delay(1600);
         goStop();
         delay(1000);
         goForward();
@@ -144,12 +141,12 @@ void stageEvent() {
         potCount++;
       }
 
-      if (ultF.distanceCM() < 50 && ultL.distanceCM() < 50 && potCount == 3) {
+      if (ultF.distanceCM() < 50 && potCount == 3) {
         goStop();
         lcd.clear();
         lcd.setCursor(0, 0);
         lcd.print("Clear!");
-        lcd.setCursor(1, 0);
+        lcd.setCursor(0, 1);
         lcd.print("Fuck all!");
         while (true);
       }
@@ -162,7 +159,7 @@ void fixStraight() {
   const int fixInterval = 1;                  //角度修正區間
   const int moreFixInterval = 40;             //加強角度修正區間
   const int fixMaxAngle = 90;                 //最大修正角度
-  float angle = calculateAngle();
+  int angle = calculateAngle();
 
   lcd.setCursor(0, 1);
   lcd.print("Angle:");
@@ -220,19 +217,21 @@ bool avoidance() {
 }
 
 ///////////////////////////////////   尋找後方盆栽   ///////////////////////////////////
-void findBackPot(int dis) {
-  lcd.setCursor(0, 0);
-  lcd.print("Find Pot");
-  lcd.setCursor(0, 1);
-  lcd.print(dis);
-  lcd.print("/");
-  lcd.print(ultB.distanceCM());
-
+void findBackPot(float dis) {
+  float distance;
   motLF.back();
   motLB.back();
   motRF.fwd();
   motRB.fwd();
-  while (ultB.distanceCM() > dis);
+  do {
+    distance = ultB.distanceCM();
+    lcd.setCursor(0, 0);
+    lcd.print("Find Pot");
+    lcd.setCursor(0, 1);
+    lcd.print(dis);
+    lcd.print("/");
+    lcd.print(distance);
+  } while (distance > dis);
 }
 
 ///////////////////////////////////   調整前方距離   ///////////////////////////////////
@@ -273,9 +272,9 @@ void fixBackDis(float dis) {
     lcd.print(distance);
 
     if (distance < dis)
-      goBack();
-    if (distance > dis)
       goForward();
+    if (distance > dis)
+      goBack();
   } while (abs(distance - dis) > error);
 }
 
