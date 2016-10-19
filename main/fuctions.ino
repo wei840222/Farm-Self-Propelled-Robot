@@ -72,7 +72,7 @@ void stageEvent() {
       break;
 
     case 6:
-      if (ultF.distanceCM() < 35 && ultL.distanceCM() < 50) {
+      if (ultF.distanceCM() < 50 && ultL.distanceCM() < 50) {
         rotateToAngle(82);
         delay(1000);
         stage++;
@@ -104,8 +104,10 @@ void stageEvent() {
           goStop();
           potCount++;
         }
-        else
+        else {
           skipPot--;
+          potCount++;
+        }
         delay(3000);
       }
 

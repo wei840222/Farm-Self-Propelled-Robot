@@ -87,7 +87,7 @@ float mpuGetAngle() {
 }
 
 int calculateAngle() {
-  const int num = 5;
+  const int num = 10;
   int angle[num];
   int sigama[num];
   int maxValue;
