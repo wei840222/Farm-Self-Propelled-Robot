@@ -113,11 +113,11 @@ void stageEvent() {
         delay(1000);
         goForward();
         delay(500);
-        rotateToAngle(2);
+        rotateToAngle(-1);
         goStop();
         delay(1000);
         goForward();
-        delay(1000);
+        delay(750);
         potCount++;
       }
 
@@ -128,14 +128,14 @@ void stageEvent() {
         delay(1500);
         goStop();
         delay(1000);
-        fixFrontDis(50);
+        fixFrontDis(40);
         goStop();
         delay(1000);
         putPot();
         delay(1000);
         goForward();
         delay(500);
-        rotateToAngle(2);
+        rotateToAngle(-1);
         goStop();
         delay(1000);
         goForward();
