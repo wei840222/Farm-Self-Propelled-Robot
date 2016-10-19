@@ -96,6 +96,7 @@ class Ultrasonic {
 
 ///////////////////////////////////   關卡控制   ///////////////////////////////////
 int stage = 0;                  //關卡編號
+int stageAngle = 0;             //關卡角度
 int potCount = 0;               //計數盆栽
 int skipPot = 0;                //略過澆灌幾個盆栽
 
@@ -112,7 +113,7 @@ void setup() {
 
   //初始化陀螺儀
   mpuInit();
-  mpuOffset();
+  //mpuOffset();
 
   //初始化超音波
   ultL.init(26, 27);
@@ -154,7 +155,7 @@ void setup() {
 
 void loop() {
   Serial.print("A:");
-  Serial.print(mpuGetAngle());
+  Serial.print(calculateAngle());
   Serial.print(" L:");
   Serial.print(ultL.distanceCM());
   Serial.print(" R:");

@@ -7,6 +7,8 @@ void stageEvent() {
 
   switch (stage) {
     case 0:
+      catchPot();
+      while (true);
       break;
 
     case 1:
@@ -19,36 +21,38 @@ void stageEvent() {
           delay(600);
           goStop();
           findBackPot(50);
+          delay(800);
+          fixBackDis(22);
           delay(1000);
-          fixBackDis(20);
-          delay(1000);
-          watering(7000);
+          watering(6000);
           delay(1000);
           goForward();
           delay(500);
           rotateToAngle(1);
           goForward();
-          delay(1000);
+          delay(500);
+          goStop();
           potCount++;
         }
         else
           skipPot--;
+        delay(3000);
       }
 
       if (ultF.distanceCM() < 35 && ultL.distanceCM() < 50) {
         rotateToAngle(82);
-        mpuInit();
         delay(1000);
         stage++;
+        stageAngle += 90;
       }
       break;
 
     case 2:
       if (ultF.distanceCM() < 35 && ultL.distanceCM() < 50) {
         rotateToAngle(82);
-        mpuInit();
         delay(1000);
         stage++;
+        stageAngle += 90;
       }
       break;
 
@@ -58,9 +62,9 @@ void stageEvent() {
     case 4:
       if (ultF.distanceCM() < 35 && ultR.distanceCM() < 50) {
         rotateToAngle(-82);
-        mpuInit();
         delay(1000);
         stage++;
+        stageAngle -= 90;
       }
       break;
 
@@ -70,37 +74,48 @@ void stageEvent() {
     case 6:
       if (ultF.distanceCM() < 35 && ultL.distanceCM() < 50) {
         rotateToAngle(82);
-        mpuInit();
         delay(1000);
         stage++;
+        stageAngle += 90;
+        skipPot = 1;
       }
       break;
 
     case 7:
+      //偵測右方盆栽
+      lcd.print(" Pot:");
+      lcd.print(potCount);
+
       if (ultR.distanceCM() < 50 && potCount < 3) {
-        delay(600);
-        goStop();
-        findBackPot(50);
-        delay(1000);
-        fixBackDis(20);
-        delay(1000);
-        watering(7000);
-        delay(1000);
-        goForward();
-        delay(500);
-        rotateToAngle(1);
-        goForward();
-        delay(1000);
-        potCount++;
+        if (skipPot == 0) {
+          delay(600);
+          goStop();
+          findBackPot(50);
+          delay(800);
+          fixBackDis(22);
+          delay(1000);
+          watering(6000);
+          delay(1000);
+          goForward();
+          delay(500);
+          rotateToAngle(1);
+          goForward();
+          delay(500);
+          goStop();
+          potCount++;
+        }
+        else
+          skipPot--;
+        delay(3000);
       }
 
-      if (ultF.distanceCM() < 35 && ultL.distanceCM() < 50) {
+      if (ultF.distanceCM() < 50 && ultL.distanceCM() < 50) {
+        goStop();
         lcd.clear();
         lcd.setCursor(0, 0);
         lcd.print("Clear!");
         lcd.setCursor(1, 0);
         lcd.print("Fuck all!");
-        goStop();
         while (true);
       }
       break;
@@ -112,7 +127,7 @@ void fixStraight() {
   const int fixInterval = 1;                  //角度修正區間
   const int moreFixInterval = 40;             //加強角度修正區間
   const int fixMaxAngle = 90;                 //最大修正角度
-  int angle = mpuGetAngle();
+  int angle = calculateAngle();
 
   lcd.setCursor(0, 1);
   lcd.print("Angle:");
@@ -276,7 +291,7 @@ void rotateToAngle(int rotationAngle) {
   const int error = 20;
   int angle;
   do {
-    angle = mpuGetAngle();
+    angle = calculateAngle();
 
     lcd.clear();
     lcd.setCursor(0, 0);
@@ -344,12 +359,12 @@ void waitForStart() {
 
 void pause() {
 
-    goStop();
+  goStop();
 
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("Pause");
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Pause");
 
-    while (!digitalRead(36));
-    while (digitalRead(36));
+  while (!digitalRead(36));
+  while (digitalRead(36));
 }

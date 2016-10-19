@@ -86,6 +86,13 @@ float mpuGetAngle() {
   }
 }
 
+int calculateAngle() {
+  int angle = mpuGetAngle() - stageAngle;
+  if(angle < -180)
+    angle += 360;
+  return angle;
+}
+
 void mpuOffset() {
   // join I2C bus (I2Cdev library doesn't do this automatically)
   Wire.begin();
