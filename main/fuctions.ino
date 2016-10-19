@@ -346,7 +346,7 @@ void rotateR() {
 }
 
 void rotateToAngle(int rotationAngle) {
-  const int error = 20;
+  const int error = 2;
   int angle;
   do {
     angle = calculateAngle();
@@ -372,7 +372,7 @@ void rotateToAngle(int rotationAngle) {
       motRF.back();
       motRB.back();
     }
-  } while (angle != rotationAngle);
+  } while (abs(angle - rotationAngle) > error);
 }
 
 ///////////////////////////////////   開始暫停鈕   ///////////////////////////////////
