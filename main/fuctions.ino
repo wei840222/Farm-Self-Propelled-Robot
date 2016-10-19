@@ -7,6 +7,9 @@ void stageEvent() {
 
   switch (stage) {
     case 0:
+      fixBackDis(22);
+      rotateToAngle(0);
+      while (1);
       break;
 
     case 1:
@@ -157,7 +160,7 @@ void fixStraight() {
   const int fixInterval = 1;                  //角度修正區間
   const int moreFixInterval = 40;             //加強角度修正區間
   const int fixMaxAngle = 90;                 //最大修正角度
-  int angle = calculateAngle();
+  float angle = calculateAngle();
 
   lcd.setCursor(0, 1);
   lcd.print("Angle:");
@@ -232,6 +235,9 @@ void findBackPot(int dis) {
 
 ///////////////////////////////////   調整前方距離   ///////////////////////////////////
 void fixFrontDis(int dis) {
+  const float error = 0.5;
+  float distance;
+
   lcd.setCursor(0, 0);
   lcd.print("Fix Dis");
   lcd.setCursor(0, 1);
@@ -240,28 +246,33 @@ void fixFrontDis(int dis) {
   lcd.print(ultF.distanceCM());
 
   do {
-    if (ultF.distanceCM() < dis)
+    distance = ultF.distanceCM();
+    if (distance < dis)
       goBack();
-    if (ultF.distanceCM() > dis)
+    if (distance > dis)
       goForward();
-  } while (ultF.distanceCM() != dis);
+  } while (abs(distance - dis) > error);
 }
 
 ///////////////////////////////////   調整後方距離   ///////////////////////////////////
 void fixBackDis(int dis) {
+  const float error = 0.5;
+  float distance;
+
   lcd.setCursor(0, 0);
   lcd.print("Fix Dis");
   lcd.setCursor(0, 1);
   lcd.print(dis);
   lcd.print("/");
-  lcd.print(ultB.distanceCM());
+  lcd.print(ultF.distanceCM());
 
   do {
-    if (ultB.distanceCM() < dis)
+    distance = ultF.distanceCM();
+    if (distance < dis)
       goForward();
-    if (ultB.distanceCM() > dis)
+    if (distance > dis)
       goBack();
-  } while (ultB.distanceCM() != dis);
+  } while (abs(distance - dis) > error);
 }
 
 ///////////////////////////////////   澆水   ///////////////////////////////////
@@ -311,10 +322,6 @@ void putPot() {
 ///////////////////////////////////   車體動作   ///////////////////////////////////
 
 void goForward() {
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Forward");
-
   motLF.fwd();
   motRF.fwd();
   motLB.fwd();
@@ -322,10 +329,6 @@ void goForward() {
 }
 
 void goBack() {
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Back");
-
   motLF.back();
   motRF.back();
   motLB.back();
@@ -333,10 +336,6 @@ void goBack() {
 }
 
 void goStop() {
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Stop");
-
   motLF.stop();
   motRF.stop();
   motLB.stop();
@@ -358,8 +357,8 @@ void rotateR() {
 }
 
 void rotateToAngle(int rotationAngle) {
-  const int error = 1;
-  int angle;
+  const float error = 1;
+  float angle;
   do {
     angle = calculateAngle();
 
@@ -371,19 +370,10 @@ void rotateToAngle(int rotationAngle) {
     lcd.print("/");
     lcd.print(angle);
 
-    if (angle > rotationAngle) {
-      motLF.back();
-      motLB.back();
-      motRF.fwd();
-      motRB.fwd();
-    }
-
-    if (angle < rotationAngle) {
-      motLF.fwd();
-      motLB.fwd();
-      motRF.back();
-      motRB.back();
-    }
+    if (angle > rotationAngle)
+      rotateL();
+    if (angle < rotationAngle)
+      rotateR();
   } while (abs(angle - rotationAngle) > error);
 }
 
