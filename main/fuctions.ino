@@ -7,6 +7,10 @@ void stageEvent() {
 
   switch (stage) {
     case 0:
+      catchPot();
+      delay(3000);
+      putPot();
+      while (true);
       break;
 
     case 1:
@@ -266,7 +270,7 @@ void catchPot() {
   serR.write(60);
   delay(1000);
   serB.write(140);
-  delay(5000);
+  delay(1000);
 }
 
 ///////////////////////////////////   放盆栽   ///////////////////////////////////
