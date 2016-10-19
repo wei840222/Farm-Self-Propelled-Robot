@@ -101,10 +101,10 @@ void stageEvent() {
       }
 
       if (ultR.distanceCM() < 50 && potCount == 1) {
-        delay(600);
+        delay(900);
         goStop();
         findBackPot(50);
-        delay(800);
+        delay(500);
         goStop();
         delay(1000);
         fixBackDis(12);
@@ -113,12 +113,12 @@ void stageEvent() {
         catchPot();
         delay(1000);
         goForward();
-        delay(300);
+        delay(500);
         rotateToAngle(0);
         goStop();
         delay(1000);
         goForward();
-        delay(1000);
+        delay(1500);
         potCount++;
       }
 
