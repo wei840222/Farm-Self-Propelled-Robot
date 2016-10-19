@@ -7,8 +7,6 @@ void stageEvent() {
 
   switch (stage) {
     case 0:
-      catchPot();
-      while (true);
       break;
 
     case 1:
@@ -27,15 +25,17 @@ void stageEvent() {
           watering(6000);
           delay(1000);
           goForward();
-          delay(500);
-          rotateToAngle(1);
+          delay(300);
+          rotateToAngle(0);
           goForward();
-          delay(500);
+          delay(1000);
           goStop();
           potCount++;
         }
-        else
+        else {
           skipPot--;
+          potCount++;
+        }
         delay(3000);
       }
 

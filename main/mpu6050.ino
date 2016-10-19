@@ -113,10 +113,10 @@ int calculateAngle() {
       meanAngle -= angle[i];
   }
   
-  meanAngle = meanAngle / 19 - stageAngle;
+  meanAngle = meanAngle / (num - 1) - stageAngle;
 
-  //if (meanAngle < -180)
-    //meanAngle += 360;
+  if (meanAngle < -180)
+    meanAngle += 360;
   return meanAngle;
 }
 
