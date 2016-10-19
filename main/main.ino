@@ -1,6 +1,7 @@
 #include <Servo.h>
 #include "MPU6050_6Axis_MotionApps20.h"
 #include "LiquidCrystal_I2C.h"
+#include "QuickStats.h"
 
 ///////////////////////////////////   硬體類別   ///////////////////////////////////
 class Motor {
@@ -102,11 +103,12 @@ int potCount = 0;               //計數盆栽
 int skipPot = 0;                //略過澆灌幾個盆栽
 
 ///////////////////////////////////   建立裝置物件   ///////////////////////////////////
-MPU6050 mpu;
-Ultrasonic ultL, ultR, ultF, ultB;
-Motor motLF, motLB, motRF, motRB;
+QuickStats stats;
 Servo serB, serL, serR;
+MPU6050 mpu;
 LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
+Motor motLF, motLB, motRF, motRB;
+Ultrasonic ultL, ultR, ultF, ultB;
 
 void setup() {
   //設定鮑率

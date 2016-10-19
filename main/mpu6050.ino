@@ -86,38 +86,26 @@ float mpuGetAngle() {
   }
 }
 
-int calculateAngle() {
-  const int num = 5;
-  int angle[num];
-  int sigama[num];
-  int maxValue;
-  int fail;
-  int meanAngle = 0;
-  for (int i = 0; i < num; i++)
-    angle[i] = mpuGetAngle();
-
-  for (int i = 0; i < num; i++)
-    for (int j = 0; j < num; j++)
-      sigama[i] += abs(angle[i] - angle[j]);
-
-  maxValue = sigama[0];
-  for (int i = 0; i < num; i++)
-    if (sigama[i] > maxValue) {
-      maxValue = sigama[i];
-      fail = i;
-    }
-
+float calculateAngle() {
+  const int num = 20;
+  float angles[num];
+  float sigama = stats.stderror(angles,num);
+  float mean = stats.average(angles,num);
+  float angle = 0;
+  int count = 0;
+  
   for (int i = 0; i < num; i++) {
-    meanAngle += angle[i];
-    if (i == fail)
-      meanAngle -= angle[i];
+    if (abs(angles[i] - mean) < sigama) {
+      angle += angles[i];
+      count++;
+    }
   }
   
-  meanAngle = meanAngle / (num - 1) - stageAngle;
+  angle = angle / count - stageAngle;
 
-  if (meanAngle < -180)
-    meanAngle += 360;
-  return meanAngle;
+  if (angle < -180)
+    angle += 360;
+  return angle;
 }
 
 void mpuOffset() {
