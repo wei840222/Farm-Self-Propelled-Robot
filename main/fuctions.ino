@@ -7,10 +7,6 @@ void stageEvent() {
 
   switch (stage) {
     case 0:
-      catchPot();
-      delay(3000);
-      putPot();
-      while (true);
       break;
 
     case 1:
@@ -48,7 +44,7 @@ void stageEvent() {
         }
       }
 
-      if (ultF.distanceCM() < 35 && ultL.distanceCM() < 50) {
+      if (ultF.distanceCM() < 35 && ultL.distanceCM() < 50 && potCount == 3) {
         rotateToAngle(82);
         delay(1000);
         stage++;
@@ -106,36 +102,36 @@ void stageEvent() {
         findBackPot(50);
         goStop();
         delay(1000);
-        fixBackDis(15);
+        fixBackDis(14);
         goStop();
         delay(1000);
         catchPot();
         delay(1000);
         goForward();
         delay(500);
-        rotateToAngle(0);
+        rotateToAngle(-2);
         goStop();
         delay(1000);
         goForward();
-        delay(1500);
+        delay(750);
         potCount++;
       }
 
       if (ultR.distanceCM() < 50 && potCount == 2) {
-        delay(600);
+        delay(900);
         goStop();
         rotateL();
-        delay(2000);
+        delay(1500);
         goStop();
         delay(1000);
-        fixBackDis(5);
+        fixFrontDis(40);
         goStop();
         delay(1000);
         putPot();
         delay(1000);
         goForward();
         delay(500);
-        rotateToAngle(0);
+        rotateToAngle(-2);
         goStop();
         delay(1000);
         goForward();
@@ -143,7 +139,7 @@ void stageEvent() {
         potCount++;
       }
 
-      if (ultF.distanceCM() < 50 && ultL.distanceCM() < 50) {
+      if (ultF.distanceCM() < 50 && ultL.distanceCM() < 50 && potCount == 3) {
         goStop();
         lcd.clear();
         lcd.setCursor(0, 0);
@@ -234,6 +230,23 @@ void findBackPot(int dis) {
   while (ultB.distanceCM() > dis);
 }
 
+///////////////////////////////////   調整前方距離   ///////////////////////////////////
+void fixFrontDis(int dis) {
+  lcd.setCursor(0, 0);
+  lcd.print("Fix Dis");
+  lcd.setCursor(0, 1);
+  lcd.print(dis);
+  lcd.print("/");
+  lcd.print(ultF.distanceCM());
+
+  do {
+    if (ultF.distanceCM() < dis)
+      goBack();
+    if (ultF.distanceCM() > dis)
+      goForward();
+  } while (ultF.distanceCM() != dis);
+}
+
 ///////////////////////////////////   調整後方距離   ///////////////////////////////////
 void fixBackDis(int dis) {
   lcd.setCursor(0, 0);
@@ -276,7 +289,7 @@ void catchPot() {
   serL.write(120);
   serR.write(60);
   delay(1000);
-  serB.write(140);
+  serB.write(120);
   delay(1000);
 }
 
@@ -345,7 +358,7 @@ void rotateR() {
 }
 
 void rotateToAngle(int rotationAngle) {
-  const int error = 20;
+  const int error = 1;
   int angle;
   do {
     angle = calculateAngle();
@@ -371,7 +384,7 @@ void rotateToAngle(int rotationAngle) {
       motRF.back();
       motRB.back();
     }
-  } while (angle != rotationAngle);
+  } while (abs(angle - rotationAngle) > error);
 }
 
 ///////////////////////////////////   開始暫停鈕   ///////////////////////////////////
