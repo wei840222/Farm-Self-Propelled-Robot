@@ -110,7 +110,7 @@ void stageEvent() {
         goForward();
         delay(500);
         rotateR();
-        delay(1500);
+        delay(1600);
         goStop();
         delay(1000);
         goForward();
@@ -122,7 +122,7 @@ void stageEvent() {
         delay(900);
         goStop();
         rotateL();
-        delay(1500);
+        delay(1600);
         goStop();
         delay(1000);
         fixFrontDis(40);
@@ -133,7 +133,7 @@ void stageEvent() {
         goForward();
         delay(500);
         rotateR();
-        delay(1500);
+        delay(1600);
         goStop();
         delay(1000);
         goForward();
