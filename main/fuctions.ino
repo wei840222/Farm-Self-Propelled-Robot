@@ -7,6 +7,8 @@ void stageEvent() {
 
   switch (stage) {
     case 0:
+      rotateToAngle(-82);
+      while (true);
       break;
 
     case 1:
@@ -14,7 +16,7 @@ void stageEvent() {
       lcd.print(" Pot:");
       lcd.print(potCount);
 
-      if (ultR.distanceCM() < 50 && count < 3) {
+      if (ultR.distanceCM() < 50 && potCount < 3) {
         if (skipPot == 0) {
           delay(600);
           goStop();
@@ -29,7 +31,7 @@ void stageEvent() {
           rotateToAngle(1);
           goForward();
           delay(1000);
-          count++;
+          potCount++;
         }
         else
           skipPot--;
@@ -77,7 +79,7 @@ void stageEvent() {
       break;
 
     case 7:
-      if (ultR.distanceCM() < 50 && count < 3) {
+      if (ultR.distanceCM() < 50 && potCount < 3) {
         delay(600);
         goStop();
         findBackPot(50);
@@ -91,7 +93,7 @@ void stageEvent() {
         rotateToAngle(1);
         goForward();
         delay(1000);
-        count++;
+        potCount++;
       }
 
       if (ultF.distanceCM() < 35 && ultL.distanceCM() < 50) {
@@ -197,7 +199,6 @@ void fixBackDis(int dis) {
   lcd.print(ultB.distanceCM());
 
   do {
-    distance = ultB.distanceCM();
     if (ultB.distanceCM() < dis)
       goForward();
     if (ultB.distanceCM() > dis)
@@ -225,6 +226,16 @@ void catchPot() {
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("Catch Pot");
+
+  serL.write(120);
+  serR.write(60);
+  delay(1000);
+  serB.write(80);
+  delay(1000);
+  serL.write(85);
+  serR.write(90);
+  delay(1000);
+  serB.write(140);
   delay(5000);
 }
 
@@ -246,7 +257,7 @@ void waitForStart() {
   }
   while (digitalRead(36));
 
-  if (stage == 0) {
+  if (stage == 1) {
     while (!digitalRead(36)) {
       lcd.clear();
       lcd.setCursor(0, 0);
@@ -317,35 +328,33 @@ void goStop() {
 }
 
 void rotateToAngle(int rotationAngle) {
-  const int error = 1;
+  const int error = 20;
   int angle;
-  while (abs(mpuGetAngle() - rotationAngle) > error) {
-    do {
-      angle = mpuGetAngle();
+  do {
+    angle = mpuGetAngle();
 
-      lcd.clear();
-      lcd.setCursor(0, 0);
-      lcd.print("Rotate");
-      lcd.setCursor(0, 1);
-      lcd.print(rotationAngle);
-      lcd.print("/");
-      lcd.print(angle);
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Rotate");
+    lcd.setCursor(0, 1);
+    lcd.print(rotationAngle);
+    lcd.print("/");
+    lcd.print(angle);
 
-      if (angle > rotationAngle) {
-        motLF.back();
-        motLB.back();
-        motRF.fwd();
-        motRB.fwd();
-      }
+    if (angle > rotationAngle) {
+      motLF.back();
+      motLB.back();
+      motRF.fwd();
+      motRB.fwd();
+    }
 
-      if (angle < rotationAngle) {
-        motLF.fwd();
-        motLB.fwd();
-        motRF.back();
-        motRB.back();
-      }
-    } while (angle != rotationAngle);
-    goStop();
-    delay(1500);
-  }
+    if (angle < rotationAngle) {
+      motLF.fwd();
+      motLB.fwd();
+      motRF.back();
+      motRB.back();
+    }
+  } while (angle != rotationAngle);
+  goStop();
+  delay(1500);
 }

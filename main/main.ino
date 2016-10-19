@@ -138,7 +138,7 @@ void setup() {
   serL.attach(6, 500, 2400);
   serR.attach(7, 500, 2400);
   serB.write(140);
-  serL.write(90);
+  serL.write(85);
   serR.write(90);
 
   //初始化按鈕
@@ -161,7 +161,6 @@ void loop() {
   Serial.print(" R:");
   Serial.println(ultR.distanceCM());
   */
-  showData();
   stageEvent();
   if (!avoidance()) fixStraight();
   waitForPause();
