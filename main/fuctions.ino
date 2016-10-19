@@ -237,56 +237,6 @@ void catchPot() {
   delay(5000);
 }
 
-///////////////////////////////////   開始暫停鈕   ///////////////////////////////////
-void waitForStart() {
-  while (!digitalRead(4)) {
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("Stage:");
-    lcd.print(stage);
-
-    if (digitalRead(35)) {
-      stage++;
-      if (stage > 7)
-        stage = 0;
-      while (digitalRead(35));
-    }
-    delay(100);
-  }
-  while (digitalRead(4));
-
-  if (stage == 1) {
-    while (!digitalRead(4)) {
-      lcd.clear();
-      lcd.setCursor(0, 0);
-      lcd.print("Stage:1");
-      lcd.setCursor(0, 1);
-      lcd.print("Skip Pot:");
-      lcd.print(skipPot);
-      if (digitalRead(35)) {
-        skipPot++;
-        if (skipPot > 3)
-          skipPot = 0;
-        while (digitalRead(35));
-      }
-      delay(100);
-    }
-    while (digitalRead(4));
-  }
-}
-
-void pause() {
-
-    goStop();
-
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("Pause");
-
-    while (!digitalRead(4));
-    while (digitalRead(4));
-}
-
 ///////////////////////////////////   車體動作   ///////////////////////////////////
 
 void goForward() {
@@ -352,4 +302,54 @@ void rotateToAngle(int rotationAngle) {
   } while (angle != rotationAngle);
   goStop();
   delay(1500);
+}
+
+///////////////////////////////////   開始暫停鈕   ///////////////////////////////////
+void waitForStart() {
+  while (!digitalRead(36)) {
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Stage:");
+    lcd.print(stage);
+
+    if (digitalRead(35)) {
+      stage++;
+      if (stage > 7)
+        stage = 0;
+      while (digitalRead(35));
+    }
+    delay(100);
+  }
+  while (digitalRead(36));
+
+  if (stage == 1) {
+    while (!digitalRead(36)) {
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Stage:1");
+      lcd.setCursor(0, 1);
+      lcd.print("Skip Pot:");
+      lcd.print(skipPot);
+      if (digitalRead(35)) {
+        skipPot++;
+        if (skipPot > 3)
+          skipPot = 0;
+        while (digitalRead(35));
+      }
+      delay(100);
+    }
+    while (digitalRead(36));
+  }
+}
+
+void pause() {
+
+    goStop();
+
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Pause");
+
+    while (!digitalRead(36));
+    while (digitalRead(36));
 }

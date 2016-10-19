@@ -1,16 +1,10 @@
 ///////////////////////////////////   GLOBAL VALUES   ///////////////////////////////////
-bool blinkState = false;
-bool dmpReady = false;  // set true if DMP init was successful
-uint8_t mpuIntStatus;   // holds actual interrupt status byte from MPU
-uint8_t devStatus;      // return status after each device operation (0 = success, !0 = error)
-uint16_t packetSize;    // expected DMP packet size (default is 42 bytes)
-uint16_t fifoCount;     // count of all bytes currently in FIFO
-uint8_t fifoBuffer[64]; // FIFO storage buffer
+uint16_t packetSize;                    // expected DMP packet size (default is 42 bytes)
+uint8_t fifoBuffer[64];                 // FIFO storage buffer
 
-Quaternion q;           // [w, x, y, z]         quaternion container
-VectorFloat gravity;    // [x, y, z]            gravity vector
-float ypr[3];           // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
-volatile bool mpuInterrupt = false;     // indicates whether MPU interrupt pin has gone high
+Quaternion q;                           // [w, x, y, z]         quaternion container
+VectorFloat gravity;                    // [x, y, z]            gravity vector
+float ypr[3];                           // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
 
 ///////////////////////////////////   ACCELGTRO OFFSET CONFIGURATION   ///////////////////////////////////
 //Change this 3 variables if you want to fine tune the skecth to your needs.
@@ -21,16 +15,11 @@ int giro_deadzone = 1;   //Giro error allowed, make it lower to get more precisi
 int16_t ax, ay, az, gx, gy, gz;
 int mean_ax, mean_ay, mean_az, mean_gx, mean_gy, mean_gz, state = 0;
 
-int ax_offset = -229, ay_offset = 1475, az_offset = 1333, gx_offset = 65, gy_offset = -26, gz_offset = -69;
+int ax_offset = -383, ay_offset = 1490, az_offset = 1338, gx_offset = 64, gy_offset = -25, gz_offset = -69;
+float angle_fix = -0.8;
 
 ///////////////////////////////////   FUNCTIONS   ///////////////////////////////////
-void dmpDataReady() {
-  mpuInterrupt = true;
-}
-
 void mpuInit() {
-  Serial.println("///////////////////////////////////   MPU6050 Initialization   ///////////////////////////////////");
-
 #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
   Wire.begin();
 #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
@@ -38,71 +27,38 @@ void mpuInit() {
 #endif
 
   // verify connection
-  Serial.println(mpu.testConnection() ? "MPU6050 connection successful" : "MPU6050 connection failed");
+  if (!mpu.testConnection())
+    Serial.println("MPU6050 connection failed");
 
-  Serial.println("Initializing I2C devices...");
   mpu.initialize();
 
-  Serial.println("Initializing DMP...");
-  devStatus = mpu.dmpInitialize();
+  // make sure it worked (returns 0 if so)
+  if (mpu.dmpInitialize() != 0) {
+    Serial.print("DMP Initialization failed (code ");
+    Serial.print(mpu.dmpInitialize());
+    Serial.println(")");
+  }
 
-  // show your own gyro offsets here, scaled for min sensitivity
-  Serial.println("The MPU6050 offset is: ");
-  Serial.print("AX:");
-  Serial.print(ax_offset);
-  Serial.print(" AY:");
-  Serial.print(ay_offset);
-  Serial.print(" AZ:");
-  Serial.print(az_offset);
-  Serial.print(" GX:");
-  Serial.print(gx_offset);
-  Serial.print(" GY:");
-  Serial.print(gy_offset);
-  Serial.print(" GZ:");
-  Serial.println(gz_offset);
+  // turn on the DMP, now that it's ready
+  mpu.setDMPEnabled(true);
+  // get expected DMP packet size for later comparison
+  packetSize = mpu.dmpGetFIFOPacketSize();
 
   // use the code below to change accel/gyro offset values
-  Serial.println("Updating internal sensor offsets...");
   mpu.setXAccelOffset(ax_offset);
   mpu.setYAccelOffset(ay_offset);
   mpu.setZAccelOffset(az_offset);
   mpu.setXGyroOffset(gx_offset);
   mpu.setYGyroOffset(gy_offset);
   mpu.setZGyroOffset(gz_offset);
-
-  // make sure it worked (returns 0 if so)
-  if (devStatus == 0) {
-    // turn on the DMP, now that it's ready
-    Serial.println("Enabling DMP...");
-    mpu.setDMPEnabled(true);
-
-    // enable Arduino interrupt detection
-    Serial.println("Enabling interrupt detection (Arduino external interrupt 0)...");
-    attachInterrupt(0, dmpDataReady, RISING);
-    mpuIntStatus = mpu.getIntStatus();
-
-    // set our DMP Ready flag so the main loop() function knows it's okay to use it
-    Serial.println("DMP ready!");
-    dmpReady = true;
-
-    // get expected DMP packet size for later comparison
-    packetSize = mpu.dmpGetFIFOPacketSize();
-  } else {
-    Serial.print("DMP Initialization failed (code ");
-    Serial.print(devStatus);
-    Serial.println(")");
-  }
-  Serial.print("\n\n\n");
 }
 
 float mpuGetAngle() {
-  const float angleFix = 0.5;
-  // reset interrupt flag and get INT_STATUS byte
-  mpuInterrupt = false;
-  mpuIntStatus = mpu.getIntStatus();
+  // holds actual interrupt status byte from MPU
+  uint8_t mpuIntStatus = mpu.getIntStatus();
 
-  // get current FIFO count
-  fifoCount = mpu.getFIFOCount();
+  // get count of all bytes currently in FIFO
+  uint16_t fifoCount = mpu.getFIFOCount();
 
   // check for overflow (this should never happen unless our code is too inefficient)
   if ((mpuIntStatus & 0x10) || fifoCount == 1024) {
@@ -113,7 +69,8 @@ float mpuGetAngle() {
     // otherwise, check for DMP data ready interrupt (this should happen frequently)
   } else if (mpuIntStatus & 0x02) {
     // wait for correct available data length, should be a VERY short wait
-    while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
+    while (fifoCount < packetSize)
+      fifoCount = mpu.getFIFOCount();
     // read a packet from FIFO
     mpu.getFIFOBytes(fifoBuffer, packetSize);
 
@@ -121,13 +78,11 @@ float mpuGetAngle() {
     // (this lets us immediately read more without waiting for an interrupt)
     fifoCount -= packetSize;
 
-//#ifdef OUTPUT_READABLE_YAWPITCHROLL
     // display Euler angles in degrees
     mpu.dmpGetQuaternion(&q, fifoBuffer);
     mpu.dmpGetGravity(&gravity, &q);
     mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-    return ypr[0] * 180 / M_PI + angleFix;
-//#endif
+    return ypr[0] * 180 / M_PI - angle_fix;
   }
 }
 
@@ -141,10 +96,8 @@ void mpuOffset() {
   while (Serial.available() && Serial.read()); // empty buffer
 
   // start message
-  Serial.println("///////////////////////////////////   MPU6050 Calibration   ///////////////////////////////////");
   Serial.println("Your MPU6050 should be placed in horizontal position, with package letters facing up.");
   Serial.println("Don't touch it until you see a finish message.");
-  Serial.print("\n\n\n");
 
   // reset offsets
   mpu.setXAccelOffset(0);
@@ -171,34 +124,37 @@ void mpuOffset() {
 
   if (state == 2) {
     meansensors();
+
+    Serial.println();
     Serial.println("Finished!");
     Serial.println("Sensor readings with offsets:");
-    Serial.print("AX");
+    Serial.print("AX:");
     Serial.print(mean_ax);
-    Serial.print("\tAY");
+    Serial.print("\tAY:");
     Serial.print(mean_ay);
-    Serial.print("\tAZ");
-    Serial.print(mean_az);
-    Serial.print("\tGX");
+    Serial.print("\tAZ:");
+    Serial.println(mean_az);
+    Serial.print("GX:");
     Serial.print(mean_gx);
-    Serial.print("\tGY");
+    Serial.print("\tGY:");
     Serial.print(mean_gy);
-    Serial.print("\tGZ");
+    Serial.print("\tGZ:");
     Serial.println(mean_gz);
     Serial.println("Your offsets:");
-    Serial.print("AX");
+    Serial.print("AX:");
     Serial.print(ax_offset);
-    Serial.print("\tAY");
+    Serial.print("\tAY:");
     Serial.print(ay_offset);
-    Serial.print("\tAZ");
-    Serial.print(az_offset);
-    Serial.print("\tGX");
+    Serial.print("\tAZ:");
+    Serial.println(az_offset);
+    Serial.print("GX:");
     Serial.print(gx_offset);
-    Serial.print("\tGY");
+    Serial.print("\tGY:");
     Serial.print(gy_offset);
-    Serial.print("\tGZ");
+    Serial.print("\tGZ:");
     Serial.println(gz_offset);
   }
+  mpuInit();
 }
 
 void meansensors() {

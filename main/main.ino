@@ -112,7 +112,7 @@ void setup() {
 
   //初始化陀螺儀
   mpuInit();
-  //mpuOffset();
+  mpuOffset();
 
   //初始化超音波
   ultL.init(26, 27);
@@ -143,15 +143,13 @@ void setup() {
 
   //初始化按鈕
   pinMode (35, INPUT);
-  pinMode (4, INPUT);
+  pinMode (36, INPUT);
 
   //初始化LCD
   lcd.begin(16, 2);
 
   //等待選關準備開始
   waitForStart();
-
-  attachInterrupt(1, pause, CHANGE);
 }
 
 void loop() {
