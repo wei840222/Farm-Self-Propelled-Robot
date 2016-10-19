@@ -37,13 +37,15 @@ void stageEvent() {
           goStop();
           delay(1000);
           goForward();
+          delay(1000);
           potCount++;
         }
         else {
+          goForward();
+          delay(1500);
           skipPot--;
           potCount++;
         }
-        delay(3000);
       }
 
       if (ultF.distanceCM() < 35 && ultL.distanceCM() < 50) {
@@ -91,6 +93,12 @@ void stageEvent() {
       //偵測右方盆栽
       lcd.print(" Pot:");
       lcd.print(potCount);
+
+      if (ultR.distanceCM() < 50 && potCount == 0) {
+        goForward();
+        delay(1500);
+        potCount++;
+      }
 
       if (ultR.distanceCM() < 50 && potCount == 1) {
         delay(600);
@@ -264,12 +272,12 @@ void catchPot() {
   lcd.setCursor(0, 0);
   lcd.print("Catch Pot");
 
-  serB.write(80);
+  serB.write(70);
   delay(1000);
   serL.write(120);
   serR.write(60);
   delay(1000);
-  serB.write(120);
+  serB.write(140);
   delay(1000);
 }
 
@@ -279,7 +287,7 @@ void putPot() {
   lcd.setCursor(0, 0);
   lcd.print("put Pot");
 
-  serB.write(80);
+  serB.write(70);
   delay(1000);
   serL.write(90);
   serR.write(85);
