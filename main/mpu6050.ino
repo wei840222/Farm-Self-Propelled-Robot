@@ -87,7 +87,7 @@ float mpuGetAngle() {
 }
 
 float calculateAngle() {
-  const int num = 10;
+  const int num = 5;
   static float angles[num * 4];
   static float meanAngle = 0;
 

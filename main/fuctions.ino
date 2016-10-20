@@ -58,8 +58,11 @@ void stageEvent() {
 
     case 2:
       if (ultF.distanceCM() < 50 && ultL.distanceCM() < 50) {
-        rotateToAngle(82);
+        goStop();
         delay(1000);
+        rotateR();
+        delay(1250);
+        goStop();
         stage++;
         stageAngle += 90;
       }
@@ -70,8 +73,11 @@ void stageEvent() {
 
     case 4:
       if (ultF.distanceCM() < 50 && ultR.distanceCM() < 50) {
-        rotateToAngle(-82);
+        goStop();
         delay(1000);
+        rotateL();
+        delay(1250);
+        goStop();
         stage++;
         stageAngle -= 90;
       }
@@ -82,8 +88,11 @@ void stageEvent() {
 
     case 6:
       if (ultF.distanceCM() < 50 && ultL.distanceCM() < 50) {
-        rotateToAngle(82);
+        goStop();
         delay(1000);
+        rotateR();
+        delay(1250);
+        goStop();
         stage++;
         stageAngle += 90;
       }
@@ -161,7 +170,7 @@ void stageEvent() {
 ///////////////////////////////////   走直線   ///////////////////////////////////
 void fixStraight() {
   const int fixInterval = 1;                  //角度修正區間
-  const int moreFixInterval = 40;             //加強角度修正區間
+  const int moreFixInterval = 50;             //加強角度修正區間
   const int fixMaxAngle = 90;                 //最大修正角度
   int angle = calculateAngle();
 
