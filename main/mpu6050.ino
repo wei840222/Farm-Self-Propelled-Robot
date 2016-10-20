@@ -15,8 +15,8 @@ int giro_deadzone = 1;   //Giro error allowed, make it lower to get more precisi
 int16_t ax, ay, az, gx, gy, gz;
 int mean_ax, mean_ay, mean_az, mean_gx, mean_gy, mean_gz, state = 0;
 
-int ax_offset = -373, ay_offset = 1474, az_offset = 1339, gx_offset = 63, gy_offset = -26, gz_offset = -69;
-float angle_fix = -0.61;
+int ax_offset = -373, ay_offset = 1486, az_offset = 1340, gx_offset = 64, gy_offset = -25, gz_offset = -69;
+float angle_fix = -0.04;
 
 ///////////////////////////////////   FUNCTIONS   ///////////////////////////////////
 void mpuInit() {

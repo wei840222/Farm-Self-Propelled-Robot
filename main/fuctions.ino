@@ -19,7 +19,7 @@ void stageEvent() {
           delay(600);
           goStop();
           findBackPot(50);
-          delay(200);
+          delay(100);
           goStop();
           delay(1000);
           fixBackDis(22);
@@ -28,9 +28,9 @@ void stageEvent() {
           watering(6500);
           delay(1000);
           goForward();
-          delay(300);
+          delay(750);
           rotateR();
-          delay(1800);
+          delay(1200);
           goStop();
           delay(1000);
           goForward();
@@ -47,10 +47,11 @@ void stageEvent() {
 
       if (ultF.distanceCM() < 40 && ultL.distanceCM() < 70) {
         goStop();
-        delay(1000);
+        delay(500);
         rotateR();
         delay(1375);
         goStop();
+        delay(500);
         stage++;
         stageAngle += 90;
       }
@@ -59,10 +60,11 @@ void stageEvent() {
     case 2:
       if (ultF.distanceCM() < 50 && ultL.distanceCM() < 70) {
         goStop();
-        delay(1000);
+        delay(500);
         rotateR();
         delay(1375);
         goStop();
+        delay(500);
         stage++;
         stageAngle += 90;
       }
@@ -74,10 +76,11 @@ void stageEvent() {
     case 4:
       if (ultF.distanceCM() < 50 && ultR.distanceCM() < 70) {
         goStop();
-        delay(1000);
+        delay(500);
         rotateL();
         delay(1375);
         goStop();
+        delay(500);
         stage++;
         stageAngle -= 90;
       }
@@ -89,10 +92,11 @@ void stageEvent() {
     case 6:
       if (ultF.distanceCM() < 50 && ultL.distanceCM() < 70) {
         goStop();
-        delay(1000);
+        delay(500);
         rotateR();
         delay(1375);
         goStop();
+        delay(500);
         stage++;
         stageAngle += 90;
       }
@@ -263,7 +267,7 @@ void fixFrontDis(float dis) {
       goBack();
     if (distance > dis)
       goForward();
-    delay(100);
+    delay(50);
   } while (abs(distance - dis) > error);
 }
 
@@ -286,7 +290,7 @@ void fixBackDis(float dis) {
       goForward();
     if (distance > dis)
       goBack();
-    delay(100);
+    delay(50);
   } while (abs(distance - dis) > error);
 }
 
