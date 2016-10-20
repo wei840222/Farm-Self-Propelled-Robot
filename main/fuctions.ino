@@ -19,12 +19,13 @@ void stageEvent() {
           delay(600);
           goStop();
           findBackPot(50);
+          delay(200);
           goStop();
           delay(1000);
           fixBackDis(22);
           goStop();
           delay(1000);
-          watering(6000);
+          watering(6500);
           delay(1000);
           goForward();
           delay(300);
