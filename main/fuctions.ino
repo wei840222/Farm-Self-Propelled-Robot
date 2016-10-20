@@ -14,7 +14,7 @@ void stageEvent() {
       lcd.print(" Pot:");
       lcd.print(potCount);
 
-      if (ultR.distanceCM() < 50 && potCount < 3) {
+      if (ultR.distanceCM() < 60 && potCount < 3) {
         if (skipPot == 0) {
           delay(600);
           goStop();
@@ -45,16 +45,19 @@ void stageEvent() {
         }
       }
 
-      if (ultF.distanceCM() < 35 && ultL.distanceCM() < 50 && potCount == 3) {
-        rotateToAngle(82);
+      if (ultF.distanceCM() < 50 && ultL.distanceCM() < 70) {
+        goStop();
         delay(1000);
+        rotateR();
+        delay(1250);
+        goStop();
         stage++;
         stageAngle += 90;
       }
       break;
 
     case 2:
-      if (ultF.distanceCM() < 35 && ultL.distanceCM() < 50) {
+      if (ultF.distanceCM() < 50 && ultL.distanceCM() < 50) {
         rotateToAngle(82);
         delay(1000);
         stage++;
@@ -66,7 +69,7 @@ void stageEvent() {
       break;
 
     case 4:
-      if (ultF.distanceCM() < 35 && ultR.distanceCM() < 50) {
+      if (ultF.distanceCM() < 50 && ultR.distanceCM() < 50) {
         rotateToAngle(-82);
         delay(1000);
         stage++;
@@ -188,8 +191,8 @@ void fixStraight() {
 bool avoidance() {
   const int fixDistance = 9;                   //開始閃牆距離
   const int minDistance = 4;                    //最小閃牆距離
-  float distanceL = ultL.distanceCM();
-  float distanceR = ultR.distanceCM();
+  int distanceL = ultL.distanceCM();
+  int distanceR = ultR.distanceCM();
 
   if (distanceL < minDistance) distanceL = minDistance;
   if (distanceR < minDistance) distanceR = minDistance;
