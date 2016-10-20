@@ -19,7 +19,6 @@ void stageEvent() {
           delay(600);
           goStop();
           findBackPot(50);
-          delay(800);
           goStop();
           delay(1000);
           fixBackDis(22);
@@ -29,7 +28,8 @@ void stageEvent() {
           delay(1000);
           goForward();
           delay(300);
-          rotateToAngle(0);
+          rotateR();
+          delay(1800);
           goStop();
           delay(1000);
           goForward();
