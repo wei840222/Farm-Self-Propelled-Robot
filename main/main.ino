@@ -112,7 +112,7 @@ void setup() {
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("Hello");
-  
+
   //設定鮑率
   Serial.begin(38400);
 
@@ -157,14 +157,14 @@ void setup() {
 }
 
 void loop() {
-/*
-  Serial.print("A:");
-  Serial.print(mpuGetAngle());
-  Serial.print(" L:");
-  Serial.print(ultL.distanceCM());
-  Serial.print(" R:");
-  Serial.println(ultR.distanceCM());
-*/
+  /*
+    Serial.print("A:");
+    Serial.print(mpuGetAngle());
+    Serial.print(" L:");
+    Serial.print(ultL.distanceCM());
+    Serial.print(" R:");
+    Serial.println(ultR.distanceCM());
+  */
   stageEvent();
   if (!avoidance()) fixStraight();
   waitForPause();

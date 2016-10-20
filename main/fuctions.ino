@@ -235,9 +235,9 @@ bool avoidance() {
 
 ///////////////////////////////////   尋找後方盆栽   ///////////////////////////////////
 void findBackPot(float dis) {
-  float distance;
+  float distance = ultB.distanceCM();
   rotateL();
-  do {
+  while (distance > dis) {
     distance = ultB.distanceCM();
     lcd.setCursor(0, 0);
     lcd.print("Find Pot");
@@ -245,53 +245,71 @@ void findBackPot(float dis) {
     lcd.print(dis);
     lcd.print("/");
     lcd.print(distance);
-  } while (distance > dis);
+  }
 }
 
 ///////////////////////////////////   調整前方距離   ///////////////////////////////////
 void fixFrontDis(float dis) {
   const float error = 1;
-  float distance;
+  float distance = ultB.distanceCM();
 
-  do {
-    distance = ultF.distanceCM();
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("Fix Front Dis");
-    lcd.setCursor(0, 1);
-    lcd.print(dis);
-    lcd.print("/");
-    lcd.print(distance);
-
-    if (distance < dis)
-      goBack();
-    if (distance > dis)
-      goForward();
-    delay(50);
-  } while (abs(distance - dis) > error);
+  if (distance > dis) {
+    goForward();
+    while (abs(distance - dis) > error) {
+      distance = ultB.distanceCM();
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Fix Back Dis");
+      lcd.setCursor(0, 1);
+      lcd.print(dis);
+      lcd.print("/");
+      lcd.print(distance);
+    }
+  } else if (distance < dis) {
+    goBack();
+    while (abs(distance - dis) > error) {
+      distance = ultB.distanceCM();
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Fix Back Dis");
+      lcd.setCursor(0, 1);
+      lcd.print(dis);
+      lcd.print("/");
+      lcd.print(distance);
+    }
+  }
 }
 
 ///////////////////////////////////   調整後方距離   ///////////////////////////////////
 void fixBackDis(float dis) {
   const float error = 1;
-  float distance;
+  float distance = ultB.distanceCM();
 
-  do {
-    distance = ultB.distanceCM();
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("Fix Back Dis");
-    lcd.setCursor(0, 1);
-    lcd.print(dis);
-    lcd.print("/");
-    lcd.print(distance);
-
-    if (distance < dis)
-      goForward();
-    if (distance > dis)
-      goBack();
-    delay(50);
-  } while (abs(distance - dis) > error);
+  if (distance > dis) {
+    goBack();
+    while (abs(distance - dis) > error) {
+      distance = ultB.distanceCM();
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Fix Back Dis");
+      lcd.setCursor(0, 1);
+      lcd.print(dis);
+      lcd.print("/");
+      lcd.print(distance);
+    }
+  } else if (distance < dis) {
+    goForward();
+    while (abs(distance - dis) > error) {
+      distance = ultB.distanceCM();
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Fix Back Dis");
+      lcd.setCursor(0, 1);
+      lcd.print(dis);
+      lcd.print("/");
+      lcd.print(distance);
+    }
+  }
 }
 
 ///////////////////////////////////   澆水   ///////////////////////////////////
@@ -368,13 +386,6 @@ void goBack() {
   motRB.back();
 }
 
-void goStop() {
-  motLF.stop();
-  motRF.stop();
-  motLB.stop();
-  motRB.stop();
-}
-
 void rotateL() {
   for (int i = 0; i < 10; i++) {
     motLF.output(-motLF.defaut / 10 * i);
@@ -403,25 +414,11 @@ void rotateR() {
   motRB.back();
 }
 
-void rotateToAngle(float rotationAngle) {
-  const float error = 1;
-  float angle;
-  do {
-    angle = mpuGetAngle();
-
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("Rotate");
-    lcd.setCursor(0, 1);
-    lcd.print(rotationAngle);
-    lcd.print("/");
-    lcd.print(angle);
-
-    if (angle > rotationAngle)
-      rotateL();
-    if (angle < rotationAngle)
-      rotateR();
-  } while (abs(angle - rotationAngle) > error);
+void goStop() {
+  motLF.stop();
+  motRF.stop();
+  motLB.stop();
+  motRB.stop();
 }
 
 ///////////////////////////////////   開始暫停鈕   ///////////////////////////////////
