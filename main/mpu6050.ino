@@ -15,8 +15,8 @@ int giro_deadzone = 1;   //Giro error allowed, make it lower to get more precisi
 int16_t ax, ay, az, gx, gy, gz;
 int mean_ax, mean_ay, mean_az, mean_gx, mean_gy, mean_gz, state = 0;
 
-int ax_offset = -377, ay_offset = 1484, az_offset = 1348, gx_offset = 62, gy_offset = -25, gz_offset = -67;
-float angle_fix = -0.8;
+int ax_offset = -391, ay_offset = 1507, az_offset = 1340, gx_offset = 64, gy_offset = -26, gz_offset = -70;
+float angle_fix = -0.61;
 
 ///////////////////////////////////   FUNCTIONS   ///////////////////////////////////
 void mpuInit() {
@@ -87,7 +87,7 @@ float mpuGetAngle() {
 }
 
 float calculateAngle() {
-  const int num = 5;
+  const int num = 10;
   float angles[num * 4];
   float angle = 0;
 
@@ -97,7 +97,7 @@ float calculateAngle() {
   stats.bubbleSort(angles, num * 4);
 
   for (int i = num; i < (num * 3 - 1); i++)
-      angle += angles[i];
+    angle += angles[i];
 
   angle /= (num * 2);
 
@@ -126,6 +126,7 @@ void mpuOffset() {
   mpu.setXGyroOffset(0);
   mpu.setYGyroOffset(0);
   mpu.setZGyroOffset(0);
+  angle_fix = 0;
 
   // calculate offset
   if (state == 0) {
@@ -144,7 +145,7 @@ void mpuOffset() {
 
   if (state == 2) {
     meansensors();
-
+    angleFix();
     Serial.println();
     Serial.println("Finished!");
     Serial.println("Sensor readings with offsets:");
@@ -173,8 +174,9 @@ void mpuOffset() {
     Serial.print(gy_offset);
     Serial.print("\tGZ:");
     Serial.println(gz_offset);
+    Serial.print("Angle Fix:");
+    Serial.println(angle_fix);
   }
-  mpuInit();
 }
 
 void meansensors() {
@@ -247,3 +249,16 @@ void calibration() {
     if (ready == 6) break;
   }
 }
+
+void angleFix() {
+  float angles[10];
+  mpuInit();
+  for (int i = 0; i < 5; i++) {
+    Serial.print("...");
+    delay(1200);
+  }
+  for (int i = 0; i < 10; i++)
+    angles[i] = calculateAngle();
+  angle_fix = stats.average(angles,10);
+}
+
