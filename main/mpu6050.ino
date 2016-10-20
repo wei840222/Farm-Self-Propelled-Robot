@@ -88,8 +88,8 @@ float mpuGetAngle() {
 
 float calculateAngle() {
   const int num = 10;
-  float angles[num * 4];
-  float angle = 0;
+  static float angles[num * 4];
+  static float meanAngle = 0;
 
   for (int i = 0; i < num * 4; i++)
     angles[i] = mpuGetAngle();
@@ -97,13 +97,14 @@ float calculateAngle() {
   stats.bubbleSort(angles, num * 4);
 
   for (int i = num; i < (num * 3 - 1); i++)
-    angle += angles[i];
+    meanAngle += angles[i];
 
-  angle /= (num * 2);
+  meanAngle = meanAngle / (num * 2) - stageAngle;
 
-  if (angle < -180)
-    angle += 360;
-  return angle;
+  if (meanAngle < -180)
+    meanAngle += 360;
+
+  return meanAngle;
 }
 
 void mpuOffset() {
@@ -259,6 +260,6 @@ void angleFix() {
   }
   for (int i = 0; i < 10; i++)
     angles[i] = calculateAngle();
-  angle_fix = stats.average(angles,10);
+  angle_fix = stats.average(angles, 10);
 }
 

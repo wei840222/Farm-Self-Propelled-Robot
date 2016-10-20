@@ -98,7 +98,7 @@ class Ultrasonic {
 
 ///////////////////////////////////   關卡控制   ///////////////////////////////////
 int stage = 0;                  //關卡編號
-int stageAngle = 0;             //關卡角度
+int stageAngle = 0;           //關卡角度
 int potCount = 0;               //計數盆栽
 int skipPot = 0;                //略過澆灌幾個盆栽
 
@@ -165,6 +165,7 @@ void loop() {
   Serial.print(" R:");
   Serial.println(ultR.distanceCM());
 */
+
   stageEvent();
   if (!avoidance()) fixStraight();
   waitForPause();
