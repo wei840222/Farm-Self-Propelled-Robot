@@ -420,6 +420,7 @@ void waitForStart() {
 
 void waitForPause() {
   if (digitalRead(36)) {
+    while (digitalRead(36));
     goStop();
 
     lcd.clear();
