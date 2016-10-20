@@ -200,8 +200,8 @@ void fixStraight() {
 bool avoidance() {
   const int fixDistance = 9;                   //開始閃牆距離
   const int minDistance = 4;                    //最小閃牆距離
-  int distanceL = ultL.distanceCM();
-  int distanceR = ultR.distanceCM();
+  float distanceL = ultL.distanceCM();
+  float distanceR = ultR.distanceCM();
 
   if (distanceL < minDistance) distanceL = minDistance;
   if (distanceR < minDistance) distanceR = minDistance;
@@ -232,10 +232,7 @@ bool avoidance() {
 ///////////////////////////////////   尋找後方盆栽   ///////////////////////////////////
 void findBackPot(float dis) {
   float distance;
-  motLF.back();
-  motLB.back();
-  motRF.fwd();
-  motRB.fwd();
+  rotateL();
   do {
     distance = ultB.distanceCM();
     lcd.setCursor(0, 0);
@@ -249,7 +246,7 @@ void findBackPot(float dis) {
 
 ///////////////////////////////////   調整前方距離   ///////////////////////////////////
 void fixFrontDis(float dis) {
-  const float error = 0.5;
+  const float error = 1;
   float distance;
 
   do {
@@ -266,12 +263,13 @@ void fixFrontDis(float dis) {
       goBack();
     if (distance > dis)
       goForward();
+    delay(100);
   } while (abs(distance - dis) > error);
 }
 
 ///////////////////////////////////   調整後方距離   ///////////////////////////////////
 void fixBackDis(float dis) {
-  const float error = 0.5;
+  const float error = 1;
   float distance;
 
   do {
@@ -288,6 +286,7 @@ void fixBackDis(float dis) {
       goForward();
     if (distance > dis)
       goBack();
+    delay(100);
   } while (abs(distance - dis) > error);
 }
 
@@ -338,26 +337,26 @@ void putPot() {
 ///////////////////////////////////   車體動作   ///////////////////////////////////
 
 void goForward() {
-  for (int i = 1; i < 6; i++) {
-    motLF.output(20 * i);
-    motRF.output(20 * i);
-    motLB.output(30 * i);
-    motRB.output(30 * i);
-    //delay(30);
+  for (int i = 0; i < 10; i++) {
+    motLF.output(motLF.defaut / 10 * i);
+    motLB.output(motLB.defaut / 10 * i);
+    motRF.output(motRF.defaut / 10 * i);
+    motRB.output(motRB.defaut / 10 * i);
+    delay(30);
   }
   motLF.fwd();
-  motRF.fwd();
   motLB.fwd();
+  motRF.fwd();
   motRB.fwd();
 }
 
 void goBack() {
-  for (int i = 1; i < 6; i++) {
-    motLF.output(-20 * i);
-    motRF.output(-20 * i);
-    motLB.output(-30 * i);
-    motRB.output(-30 * i);
-    //delay(30);
+  for (int i = 0; i < 10; i++) {
+    motLF.output(-motLF.defaut / 10 * i);
+    motLB.output(-motLB.defaut / 10 * i);
+    motRF.output(-motRF.defaut / 10 * i);
+    motRB.output(-motRB.defaut / 10 * i);
+    delay(30);
   }
   motLF.back();
   motRF.back();
@@ -373,11 +372,11 @@ void goStop() {
 }
 
 void rotateL() {
-  for (int i = 1; i < 6; i++) {
-    motLF.output(-20 * i);
-    motRF.output(20 * i);
-    motLB.output(-30 * i);
-    motRB.output(30 * i);
+  for (int i = 0; i < 10; i++) {
+    motLF.output(-motLF.defaut / 10 * i);
+    motLB.output(-motLB.defaut / 10 * i);
+    motRF.output(motRF.defaut / 10 * i);
+    motRB.output(motRB.defaut / 10 * i);
     delay(30);
   }
   motLF.back();
@@ -387,11 +386,11 @@ void rotateL() {
 }
 
 void rotateR() {
-  for (int i = 1; i < 6; i++) {
-    motLF.output(20 * i);
-    motRF.output(-20 * i);
-    motLB.output(30 * i);
-    motRB.output(-30 * i);
+  for (int i = 0; i < 10; i++) {
+    motLF.output(motLF.defaut / 10 * i);
+    motLB.output(motLB.defaut / 10 * i);
+    motRF.output(-motRF.defaut / 10 * i);
+    motRB.output(-motRB.defaut / 10 * i);
     delay(30);
   }
   motLF.fwd();

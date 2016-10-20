@@ -28,10 +28,6 @@ class Motor {
       reverse *= -1;
     }
 
-    void setDefaut(int D) {
-      defaut = D;
-    }
-
     void stop() {
       digitalWrite(pinA, LOW);
       digitalWrite(pinB, LOW);
@@ -129,10 +125,10 @@ void setup() {
   motRF.init(24, 25, 11);
   motLB.init(37, 38, 8);
   motRB.init(39, 40, 9);
-  motLF.setDefaut(90);
-  motLB.setDefaut(90 / 6.5 * 12);
-  motRF.setDefaut(113);
-  motRB.setDefaut(113 / 6.5 * 12);
+  motLF.defaut = 90;
+  motLB.defaut = 90 / 6.5 * 12;
+  motRF.defaut = 113;
+  motRB.defaut = 113 / 6.5 * 12;
 
   //初始化抽水馬達
   pinMode (34, OUTPUT);

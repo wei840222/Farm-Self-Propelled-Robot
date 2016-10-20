@@ -88,8 +88,8 @@ float mpuGetAngle() {
 
 float calculateAngle() {
   const int num = 3;
-  static float angles[num * 4];
-  static float meanAngle = 0;
+  float angles[num * 4];
+  float meanAngle = 0;
 
   for (int i = 0; i < num * 4; i++)
     angles[i] = mpuGetAngle();
@@ -259,7 +259,7 @@ void angleFix() {
     delay(1200);
   }
   for (int i = 0; i < 10; i++)
-    angles[i] = mpuGetAngle();
+    angles[i] = calculateAngle();
   angle_fix = stats.average(angles, 10);
 }
 
