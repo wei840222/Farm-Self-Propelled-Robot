@@ -51,12 +51,12 @@ class Motor {
     }
 
     void fwd() {
-      output(defaut * 1.2);
+      output(defaut * 1.3);
     }
 
     void back() {
       setReverse();
-      output(defaut * 1.2);
+      output(defaut * 1.3);
       setReverse();
     }
 };
@@ -107,6 +107,12 @@ Motor motLF, motLB, motRF, motRB;
 Ultrasonic ultL, ultR, ultF, ultB;
 
 void setup() {
+  //初始化LCD
+  lcd.begin(16, 2);
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Hello");
+  
   //設定鮑率
   Serial.begin(38400);
 
@@ -145,9 +151,6 @@ void setup() {
   pinMode (35, INPUT);
   pinMode (36, INPUT);
 
-  //初始化LCD
-  lcd.begin(16, 2);
-
   //等待選關準備開始
   waitForStart();
   goForward();
@@ -162,7 +165,6 @@ void loop() {
   Serial.print(" R:");
   Serial.println(ultR.distanceCM());
 */
-
   stageEvent();
   if (!avoidance()) fixStraight();
   waitForPause();

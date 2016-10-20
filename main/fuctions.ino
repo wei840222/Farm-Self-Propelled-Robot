@@ -7,22 +7,6 @@ void stageEvent() {
 
   switch (stage) {
     case 0:
-    goForward();
-    delay(3000);
-    goStop();
-    delay(1000);
-    rotateL();
-    delay(2500);
-    goStop();
-    delay(1000);
-    goBack();
-    delay(3000);
-    goStop();
-    delay(1000);
-    rotateR();
-    delay(2500);
-    goStop();
-    while(true);
       break;
 
     case 1:
@@ -65,22 +49,22 @@ void stageEvent() {
         goStop();
         delay(1000);
         rotateR();
-        delay(1250);
+        delay(1375);
         goStop();
         stage++;
-        stageAngle += 82;
+        stageAngle += 90;
       }
       break;
 
     case 2:
-      if (ultF.distanceCM() < 50 && ultL.distanceCM() < 50) {
+      if (ultF.distanceCM() < 50 && ultL.distanceCM() < 70) {
         goStop();
         delay(1000);
         rotateR();
-        delay(1250);
+        delay(1375);
         goStop();
         stage++;
-        stageAngle += 82;
+        stageAngle += 90;
       }
       break;
 
@@ -88,14 +72,14 @@ void stageEvent() {
       break;
 
     case 4:
-      if (ultF.distanceCM() < 50 && ultR.distanceCM() < 50) {
+      if (ultF.distanceCM() < 50 && ultR.distanceCM() < 70) {
         goStop();
         delay(1000);
         rotateL();
-        delay(1250);
+        delay(1375);
         goStop();
         stage++;
-        stageAngle -= 82;
+        stageAngle -= 90;
       }
       break;
 
@@ -103,14 +87,14 @@ void stageEvent() {
       break;
 
     case 6:
-      if (ultF.distanceCM() < 50 && ultL.distanceCM() < 50) {
+      if (ultF.distanceCM() < 50 && ultL.distanceCM() < 70) {
         goStop();
         delay(1000);
         rotateR();
-        delay(1250);
+        delay(1375);
         goStop();
         stage++;
-        stageAngle += 82;
+        stageAngle += 90;
       }
       break;
 
