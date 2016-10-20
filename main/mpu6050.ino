@@ -15,7 +15,7 @@ int giro_deadzone = 1;   //Giro error allowed, make it lower to get more precisi
 int16_t ax, ay, az, gx, gy, gz;
 int mean_ax, mean_ay, mean_az, mean_gx, mean_gy, mean_gz, state = 0;
 
-int ax_offset = -391, ay_offset = 1507, az_offset = 1340, gx_offset = 64, gy_offset = -26, gz_offset = -70;
+int ax_offset = -373, ay_offset = 1474, az_offset = 1339, gx_offset = 63, gy_offset = -26, gz_offset = -69;
 float angle_fix = -0.61;
 
 ///////////////////////////////////   FUNCTIONS   ///////////////////////////////////
@@ -82,12 +82,12 @@ float mpuGetAngle() {
     mpu.dmpGetQuaternion(&q, fifoBuffer);
     mpu.dmpGetGravity(&gravity, &q);
     mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-    return ypr[0] * 180 / M_PI - angle_fix;
+    return ypr[0] * 180 / M_PI - angle_fix - stageAngle;
   }
 }
 
 float calculateAngle() {
-  const int num = 5;
+  const int num = 3;
   static float angles[num * 4];
   static float meanAngle = 0;
 
@@ -259,7 +259,7 @@ void angleFix() {
     delay(1200);
   }
   for (int i = 0; i < 10; i++)
-    angles[i] = calculateAngle();
+    angles[i] = mpuGetAngle();
   angle_fix = stats.average(angles, 10);
 }
 

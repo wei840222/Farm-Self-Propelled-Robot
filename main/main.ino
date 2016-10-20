@@ -159,7 +159,7 @@ void setup() {
 void loop() {
 /*
   Serial.print("A:");
-  Serial.print(calculateAngle());
+  Serial.print(mpuGetAngle());
   Serial.print(" L:");
   Serial.print(ultL.distanceCM());
   Serial.print(" R:");

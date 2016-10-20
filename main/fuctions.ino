@@ -45,14 +45,14 @@ void stageEvent() {
         }
       }
 
-      if (ultF.distanceCM() < 50 && ultL.distanceCM() < 70) {
+      if (ultF.distanceCM() < 40 && ultL.distanceCM() < 70) {
         goStop();
         delay(1000);
         rotateR();
         delay(1250);
         goStop();
         stage++;
-        stageAngle += 90;
+        stageAngle += 82;
       }
       break;
 
@@ -64,7 +64,7 @@ void stageEvent() {
         delay(1250);
         goStop();
         stage++;
-        stageAngle += 90;
+        stageAngle += 82;
       }
       break;
 
@@ -79,7 +79,7 @@ void stageEvent() {
         delay(1250);
         goStop();
         stage++;
-        stageAngle -= 90;
+        stageAngle -= 82;
       }
       break;
 
@@ -94,7 +94,7 @@ void stageEvent() {
         delay(1250);
         goStop();
         stage++;
-        stageAngle += 90;
+        stageAngle += 82;
       }
       break;
 
@@ -172,7 +172,7 @@ void fixStraight() {
   const int fixInterval = 1;                  //角度修正區間
   const int moreFixInterval = 50;             //加強角度修正區間
   const int fixMaxAngle = 90;                 //最大修正角度
-  int angle = calculateAngle();
+  int angle = mpuGetAngle();
 
   lcd.setCursor(0, 1);
   lcd.print("Angle:");
@@ -338,6 +338,13 @@ void putPot() {
 ///////////////////////////////////   車體動作   ///////////////////////////////////
 
 void goForward() {
+  for (int i = 1; i < 6; i++) {
+    motLF.output(20 * i);
+    motRF.output(20 * i);
+    motLB.output(30 * i);
+    motRB.output(30 * i);
+    delay(30);
+  }
   motLF.fwd();
   motRF.fwd();
   motLB.fwd();
@@ -345,6 +352,13 @@ void goForward() {
 }
 
 void goBack() {
+  for (int i = 1; i < 6; i++) {
+    motLF.output(-20 * i);
+    motRF.output(-20 * i);
+    motLB.output(-30 * i);
+    motRB.output(-30 * i);
+    delay(30);
+  }
   motLF.back();
   motRF.back();
   motLB.back();
@@ -359,6 +373,13 @@ void goStop() {
 }
 
 void rotateL() {
+  for (int i = 1; i < 6; i++) {
+    motLF.output(-20 * i);
+    motRF.output(20 * i);
+    motLB.output(-30 * i);
+    motRB.output(30 * i);
+    delay(30);
+  }
   motLF.back();
   motLB.back();
   motRF.fwd();
@@ -366,6 +387,13 @@ void rotateL() {
 }
 
 void rotateR() {
+  for (int i = 1; i < 6; i++) {
+    motLF.output(20 * i);
+    motRF.output(-20 * i);
+    motLB.output(30 * i);
+    motRB.output(-30 * i);
+    delay(30);
+  }
   motLF.fwd();
   motLB.fwd();
   motRF.back();
@@ -376,7 +404,7 @@ void rotateToAngle(float rotationAngle) {
   const float error = 1;
   float angle;
   do {
-    angle = calculateAngle();
+    angle = mpuGetAngle();
 
     lcd.clear();
     lcd.setCursor(0, 0);
