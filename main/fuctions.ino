@@ -14,7 +14,7 @@ void stageEvent() {
       lcd.print(" Pot:");
       lcd.print(potCount);
 
-      if (ultR.distanceCM() < 60 && potCount < 3) {
+      if (ultR.distanceCM() < 70 && potCount < 3) {
         if (skipPot == 0) {
           delay(600);
           goStop();
@@ -343,7 +343,7 @@ void goForward() {
     motRF.output(20 * i);
     motLB.output(30 * i);
     motRB.output(30 * i);
-    delay(30);
+    //delay(30);
   }
   motLF.fwd();
   motRF.fwd();
@@ -357,7 +357,7 @@ void goBack() {
     motRF.output(-20 * i);
     motLB.output(-30 * i);
     motRB.output(-30 * i);
-    delay(30);
+    //delay(30);
   }
   motLF.back();
   motRF.back();

@@ -154,6 +154,7 @@ void setup() {
 
   //等待選關準備開始
   waitForStart();
+  goForward();
 }
 
 void loop() {
