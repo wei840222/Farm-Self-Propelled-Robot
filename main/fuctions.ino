@@ -7,6 +7,22 @@ void stageEvent() {
 
   switch (stage) {
     case 0:
+    goForward();
+    delay(3000);
+    goStop();
+    delay(1000);
+    rotateL();
+    delay(2500);
+    goStop();
+    delay(1000);
+    goBack();
+    delay(3000);
+    goStop();
+    delay(1000);
+    rotateR();
+    delay(2500);
+    goStop();
+    while(true);
       break;
 
     case 1:
@@ -342,7 +358,7 @@ void goForward() {
     motLB.output(motLB.defaut / 10 * i);
     motRF.output(motRF.defaut / 10 * i);
     motRB.output(motRB.defaut / 10 * i);
-    delay(30);
+    delay(15);
   }
   motLF.fwd();
   motLB.fwd();
@@ -356,7 +372,7 @@ void goBack() {
     motLB.output(-motLB.defaut / 10 * i);
     motRF.output(-motRF.defaut / 10 * i);
     motRB.output(-motRB.defaut / 10 * i);
-    delay(30);
+    delay(15);
   }
   motLF.back();
   motRF.back();
@@ -377,7 +393,7 @@ void rotateL() {
     motLB.output(-motLB.defaut / 10 * i);
     motRF.output(motRF.defaut / 10 * i);
     motRB.output(motRB.defaut / 10 * i);
-    delay(30);
+    delay(15);
   }
   motLF.back();
   motLB.back();
@@ -391,7 +407,7 @@ void rotateR() {
     motLB.output(motLB.defaut / 10 * i);
     motRF.output(-motRF.defaut / 10 * i);
     motRB.output(-motRB.defaut / 10 * i);
-    delay(30);
+    delay(15);
   }
   motLF.fwd();
   motLB.fwd();

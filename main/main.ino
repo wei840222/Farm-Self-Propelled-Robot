@@ -51,12 +51,12 @@ class Motor {
     }
 
     void fwd() {
-      output(defaut);
+      output(defaut * 1.2);
     }
 
     void back() {
       setReverse();
-      output(defaut);
+      output(defaut * 1.2);
       setReverse();
     }
 };
