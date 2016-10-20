@@ -143,7 +143,7 @@ void setup() {
   serR.attach(7, 500, 2400);
   serB.write(140);
   serL.write(85);
-  serR.write(90);
+  serR.write(80);
 
   //初始化按鈕
   pinMode (35, INPUT);
