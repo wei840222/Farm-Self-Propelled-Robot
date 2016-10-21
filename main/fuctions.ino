@@ -214,8 +214,8 @@ bool avoidance() {
     lcd.setCursor(0, 1);
     lcd.print("DisL:");
     lcd.print(distanceL);
-    motLF.fwd();
-    motLB.fwd();
+    motLF.output(motLF.defaut);
+    motLB.output(motLB.defaut);
     motRF.output(motRF.defaut - motRF.defaut / (fixDistance - minDistance) * (fixDistance - distanceL));
     motRB.output(motRB.defaut - motRB.defaut / (fixDistance - minDistance) * (fixDistance - distanceL));
     return true;
@@ -226,8 +226,8 @@ bool avoidance() {
     lcd.print(distanceR);
     motLF.output(motLF.defaut - motLF.defaut / (fixDistance - minDistance) * (fixDistance - distanceR));
     motLB.output(motLB.defaut - motLB.defaut / (fixDistance - minDistance) * (fixDistance - distanceR));
-    motRF.fwd();
-    motRB.fwd();
+    motRF.output(motRF.defaut);
+    motRB.output(motRB.defaut);
     return true;
   }
   else return false;

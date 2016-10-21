@@ -87,7 +87,7 @@ float mpuGetAngle() {
 }
 
 float calculateAngle() {
-  const int num = 3;
+  const int num = 10;
   float angles[num * 4];
   float meanAngle = 0;
 
@@ -99,7 +99,7 @@ float calculateAngle() {
   for (int i = num; i < (num * 3 - 1); i++)
     meanAngle += angles[i];
 
-  meanAngle = meanAngle / (num * 2) - stageAngle;
+  meanAngle = meanAngle / (num * 2);
 
   if (meanAngle < -180)
     meanAngle += 360;
