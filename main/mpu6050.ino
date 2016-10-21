@@ -16,7 +16,7 @@ int16_t ax, ay, az, gx, gy, gz;
 int mean_ax, mean_ay, mean_az, mean_gx, mean_gy, mean_gz, state = 0;
 
 int ax_offset = -373, ay_offset = 1460, az_offset = 1343, gx_offset = 62, gy_offset = -25, gz_offset = -68;
-float angle_fix = -1.1;
+float angle_fix = -2;
 
 ///////////////////////////////////   FUNCTIONS   ///////////////////////////////////
 void mpuInit() {
@@ -87,7 +87,7 @@ float mpuGetAngle() {
 }
 
 float calculateAngle() {
-  const int num = 10;
+  const int num = 3;
   float angles[num * 4];
   float meanAngle = 0;
 

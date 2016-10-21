@@ -7,11 +7,6 @@ void stageEvent() {
 
   switch (stage) {
     case 0:
-      catchPot();
-      delay(3000);
-      putPot();
-      watering(5000);
-      while (true);
       break;
 
     case 1:
