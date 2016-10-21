@@ -15,8 +15,8 @@ int giro_deadzone = 1;   //Giro error allowed, make it lower to get more precisi
 int16_t ax, ay, az, gx, gy, gz;
 int mean_ax, mean_ay, mean_az, mean_gx, mean_gy, mean_gz, state = 0;
 
-int ax_offset = -373, ay_offset = 1486, az_offset = 1340, gx_offset = 64, gy_offset = -25, gz_offset = -69;
-float angle_fix = -0.04;
+int ax_offset = -373, ay_offset = 1460, az_offset = 1343, gx_offset = 62, gy_offset = -25, gz_offset = -68;
+float angle_fix = -1.1;
 
 ///////////////////////////////////   FUNCTIONS   ///////////////////////////////////
 void mpuInit() {
@@ -108,6 +108,10 @@ float calculateAngle() {
 }
 
 void mpuOffset() {
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("MPU Offset...");
+
   // join I2C bus (I2Cdev library doesn't do this automatically)
   Wire.begin();
   // COMMENT NEXT LINE IF YOU ARE USING ARDUINO DUE
@@ -146,7 +150,6 @@ void mpuOffset() {
 
   if (state == 2) {
     meansensors();
-    angleFix();
     Serial.println();
     Serial.println("Finished!");
     Serial.println("Sensor readings with offsets:");
@@ -250,16 +253,3 @@ void calibration() {
     if (ready == 6) break;
   }
 }
-
-void angleFix() {
-  float angles[10];
-  mpuInit();
-  for (int i = 0; i < 5; i++) {
-    Serial.print("...");
-    delay(1200);
-  }
-  for (int i = 0; i < 10; i++)
-    angles[i] = calculateAngle();
-  angle_fix = stats.average(angles, 10);
-}
-

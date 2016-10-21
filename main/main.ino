@@ -158,12 +158,12 @@ void setup() {
 
 void loop() {
   /*
-    Serial.print("A:");
-    Serial.print(mpuGetAngle());
-    Serial.print(" L:");
-    Serial.print(ultL.distanceCM());
-    Serial.print(" R:");
-    Serial.println(ultR.distanceCM());
+      Serial.print("A:");
+      Serial.print(mpuGetAngle());
+      Serial.print(" L:");
+      Serial.print(ultL.distanceCM());
+      Serial.print(" R:");
+      Serial.println(ultR.distanceCM());
   */
   stageEvent();
   if (!avoidance()) fixStraight();
