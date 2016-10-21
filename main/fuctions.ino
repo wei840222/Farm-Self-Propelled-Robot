@@ -7,6 +7,10 @@ void stageEvent() {
 
   switch (stage) {
     case 0:
+      catchPot();
+      delay(3000);
+      putPot();
+      while (true);
       break;
 
     case 1:
@@ -139,7 +143,7 @@ void stageEvent() {
         delay(900);
         goStop();
         rotateL();
-        delay(1600);
+        delay(1400);
         goStop();
         delay(1000);
         fixFrontDis(40);
@@ -150,7 +154,7 @@ void stageEvent() {
         goForward();
         delay(500);
         rotateR();
-        delay(1600);
+        delay(1400);
         goStop();
         delay(1000);
         goForward();
@@ -334,7 +338,7 @@ void catchPot() {
 
   serB.write(70);
   delay(1000);
-  serL.write(120);
+  serL.write(110);
   serR.write(60);
   delay(1000);
   serB.write(120);
@@ -349,7 +353,7 @@ void putPot() {
 
   serB.write(70);
   delay(1000);
-  serL.write(90);
+  serL.write(80);
   serR.write(85);
   delay(1000);
   serB.write(140);
